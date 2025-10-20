@@ -60,7 +60,20 @@ public class Dao {
 	}
 
 	public void insertarDatosConStatement(Connection conn, String sql) throws SQLException {
-		throw new UnsupportedOperationException("Not implemented");
+		if (sql == null || sql.trim().isEmpty()) {
+			throw new IllegalArgumentException("SQL string is null or empty");
+		}
+
+		// Remove trailing semicolon if present to avoid driver errors
+		String trimmed = sql.trim();
+		if (trimmed.endsWith(";")) {
+			trimmed = trimmed.substring(0, trimmed.length() - 1);
+		}
+
+		try (java.sql.Statement stmt = conn.createStatement()) {
+			int affected = stmt.executeUpdate(trimmed);
+			System.out.println("Sentencia ejecutada. Filas afectadas: " + affected);
+		}
 	}
 
 	public void obtenerYMostrarApellidosAlternativo(String dni, Connection conn) throws SQLException {

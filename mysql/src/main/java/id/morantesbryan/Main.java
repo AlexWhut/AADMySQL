@@ -167,6 +167,8 @@ public class Main {
 
             print.imprimirRegistros(connection, CATALOGO, NOMBRE_TABLA);
 
+            dao.insertarDatosConStatement(connection, INSERT_CLIENTES);
+
             // Cerramos la conexion
             connection.close();
         } catch (Exception e) {
