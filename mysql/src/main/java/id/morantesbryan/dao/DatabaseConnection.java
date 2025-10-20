@@ -1,4 +1,4 @@
-package id.morantesbryan;
+package id.morantesbryan.dao;
 
 import java.io.IOException;
 import java.io.InputStream;
