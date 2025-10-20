@@ -43,7 +43,8 @@ public class Main {
             /**
              * Ejecutamos una sentencia DDL para crear una tabla
              */
-            //dao.crearTablaClientesSiNoExiste();
+            // Asegurarnos de que la tabla exista antes de consultar/insertar
+            dao.crearTablaClientesSiNoExiste();
             // Imprimimos los resultados
             //print.imprimirTablas(connection, CATALOGO);
 

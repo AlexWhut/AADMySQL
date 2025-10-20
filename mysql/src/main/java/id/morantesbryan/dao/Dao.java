@@ -48,7 +48,15 @@ public class Dao {
 	}
 
 	public void crearTablaClientesSiNoExiste() throws SQLException {
-		throw new UnsupportedOperationException("Not implemented");
+		String sql = "CREATE TABLE IF NOT EXISTS CLIENTES (" +
+				"DNI VARCHAR(20) PRIMARY KEY, " +
+				"APELLIDOS VARCHAR(255), " +
+				"CP INT" +
+				")";
+
+		try (java.sql.Statement stmt = connection.createStatement()) {
+			stmt.execute(sql);
+		}
 	}
 
 	public void insertarDatosConStatement(Connection conn, String sql) throws SQLException {
