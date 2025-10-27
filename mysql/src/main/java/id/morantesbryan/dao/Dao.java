@@ -71,8 +71,15 @@ public class Dao {
 		}
 
 		try (java.sql.Statement stmt = conn.createStatement()) {
-			int affected = stmt.executeUpdate(trimmed);
-			System.out.println("Sentencia ejecutada. Filas afectadas: " + affected);
+			try {
+				int affected = stmt.executeUpdate(trimmed);
+				System.out.println("Sentencia ejecutada. Filas afectadas: " + affected);
+			} catch (java.sql.SQLIntegrityConstraintViolationException ex) {
+				// Duplicate key or other integrity constraint violation — warn and continue
+				System.err.println("Advertencia: restricción de integridad al ejecutar la sentencia: " + ex.getMessage());
+				// Optionally, you could implement a fallback to insert rows individually
+				// or use INSERT IGNORE / ON DUPLICATE KEY UPDATE depending on desired behavior.
+			}
 		}
 	}
 
