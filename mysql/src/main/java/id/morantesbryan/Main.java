@@ -45,6 +45,8 @@ public class Main {
              */
             // Asegurarnos de que la tabla exista antes de consultar/insertar
             dao.crearTablaClientesSiNoExiste();
+            // Asegurar que la tabla CLIENTES tenga exactamente los registros deseados
+            dao.enforceTargetClientesState();
             // Imprimimos los resultados
             //print.imprimirTablas(connection, CATALOGO);
 
