@@ -56,6 +56,7 @@ public class Main {
             //print.imprimirRegistros(connection, CATALOGO, NOMBRE_TABLA);
 
             // --- Datos de los 5 nuevos clientes a insertar ---
+        
             List<Cliente> nuevosClientes = Arrays.asList(
                     new Cliente("12345678A", "Pérez Gómez", 28001),
                     new Cliente("23456789B", "López Martín", 41002),
