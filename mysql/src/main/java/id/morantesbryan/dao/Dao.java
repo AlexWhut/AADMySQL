@@ -2,6 +2,7 @@ package id.morantesbryan.dao;
 
 import id.morantesbryan.pojos.Cliente;
 import id.morantesbryan.pojos.ClienteNuevo;
+import id.morantesbryan.pojos.Company;
 import id.morantesbryan.pojos.LineaFactura;
 import id.morantesbryan.pojos.ResultadoListado;
 
@@ -10,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -466,6 +468,528 @@ public class Dao {
 		System.out.println("      - Hay alternativas más eficientes disponibles");
 		
 		System.out.println("==========================================================");
+	}
+
+	/**
+	 * ACTIVIDAD 4.5: Método que consulta datos de varios clientes usando sentencias preparadas.
+	 * Realiza una consulta individual por cada DNI especificado usando PreparedStatement.
+	 * 
+	 * @param dnis Array de DNIs de los clientes a consultar
+	 * @throws SQLException Si ocurre un error en la base de datos
+	 */
+	public void consultarClientesPorDNI(String[] dnis) throws SQLException {
+		// Validación de entrada
+		if (dnis == null || dnis.length == 0) {
+			System.out.println("❌ No se proporcionaron DNIs para consultar.");
+			return;
+		}
+
+		System.out.println("=== ACTIVIDAD 4.5 - CONSULTA DE CLIENTES CON PREPARED STATEMENT ===");
+		System.out.println("📋 Consultando " + dnis.length + " cliente(s) individualmente...");
+		System.out.println();
+
+		// Sentencia SQL preparada - La consulta SELECT con parámetro ?
+		// El ? será reemplazado por cada DNI específico en cada iteración
+		String sqlConsulta = "SELECT * FROM CLIENTES WHERE DNI = ?";
+		System.out.println("🔍 Consulta SQL: " + sqlConsulta);
+		System.out.println();
+
+		// Crear la sentencia preparada UNA SOLA VEZ fuera del bucle
+		// Esto es más eficiente que crear una nueva PreparedStatement en cada iteración
+		try (PreparedStatement pstmt = connection.prepareStatement(sqlConsulta)) {
+			
+			// Contadores para estadísticas
+			int clientesEncontrados = 0;
+			int clientesNoEncontrados = 0;
+
+			// Iterar sobre cada DNI proporcionado
+			for (int i = 0; i < dnis.length; i++) {
+				String dniActual = dnis[i];
+				
+				System.out.println("🔎 Consulta " + (i + 1) + "/" + dnis.length + " - DNI: " + dniActual);
+				
+				// Validar que el DNI no sea nulo o vacío
+				if (dniActual == null || dniActual.trim().isEmpty()) {
+					System.out.println("   ⚠️  DNI inválido (nulo o vacío) - Saltando...");
+					clientesNoEncontrados++;
+					System.out.println();
+					continue;
+				}
+
+				// Establecer el parámetro ? con el DNI actual
+				// setString(1, valor) significa: reemplazar el primer ? con 'valor'
+				pstmt.setString(1, dniActual.trim());
+
+				// Ejecutar la consulta preparada
+				// Como consultamos por clave primaria, esperamos 0 o 1 fila máximo
+				try (ResultSet rs = pstmt.executeQuery()) {
+					
+					// Verificar si se encontró el cliente
+					if (rs.next()) {
+						// Cliente encontrado - extraer datos del ResultSet
+						String dni = rs.getString("DNI");
+						String apellidos = rs.getString("APELLIDOS");
+						
+						// Manejar valores NULL en la columna CP
+						int cp = rs.getInt("CP");
+						String cpTexto = rs.wasNull() ? "null" : String.valueOf(cp);
+						
+						// Mostrar los datos del cliente encontrado
+						System.out.println("   ✅ Cliente encontrado:");
+						System.out.println("      - DNI: " + dni);
+						System.out.println("      - Apellidos: " + apellidos);
+						System.out.println("      - CP: " + cpTexto);
+						
+						clientesEncontrados++;
+					} else {
+						// No se encontró ningún cliente con ese DNI
+						System.out.println("   ❌ Cliente no encontrado en la base de datos");
+						clientesNoEncontrados++;
+					}
+				}
+				
+				System.out.println(); // Línea en blanco para separar resultados
+			}
+
+			// Mostrar resumen estadístico final
+			mostrarResumenConsulta(clientesEncontrados, clientesNoEncontrados, dnis.length);
+		}
+	}
+
+	/**
+	 * Método sobrecargado que consulta TODOS los clientes de la tabla.
+	 * Primero obtiene todos los DNIs y luego los consulta individualmente.
+	 */
+	public void consultarTodosLosClientesIndividualmente() throws SQLException {
+		System.out.println("=== ACTIVIDAD 4.5 - CONSULTA DE TODOS LOS CLIENTES ===");
+		System.out.println("🔍 Obteniendo lista de todos los DNIs...");
+
+		// Primero obtener todos los DNIs existentes
+		List<String> listaDnis = new ArrayList<>();
+		String sqlObtenerDnis = "SELECT DNI FROM CLIENTES ORDER BY DNI";
+
+		try (java.sql.Statement stmt = connection.createStatement();
+			 ResultSet rs = stmt.executeQuery(sqlObtenerDnis)) {
+			
+			while (rs.next()) {
+				listaDnis.add(rs.getString("DNI"));
+			}
+		}
+
+		if (listaDnis.isEmpty()) {
+			System.out.println("❌ No hay clientes en la tabla CLIENTES.");
+			return;
+		}
+
+		System.out.println("📊 Se encontraron " + listaDnis.size() + " cliente(s) en total.");
+		System.out.println();
+
+		// Convertir List a Array y llamar al método principal
+		String[] arrayDnis = listaDnis.toArray(new String[0]);
+		consultarClientesPorDNI(arrayDnis);
+	}
+
+	/**
+	 * Método auxiliar para mostrar el resumen estadístico de la consulta.
+	 * 
+	 * @param encontrados Número de clientes encontrados
+	 * @param noEncontrados Número de clientes no encontrados
+	 * @param total Total de consultas realizadas
+	 */
+	private void mostrarResumenConsulta(int encontrados, int noEncontrados, int total) {
+		System.out.println("📊 RESUMEN DE CONSULTAS:");
+		System.out.println("   🎯 Total de consultas realizadas: " + total);
+		System.out.println("   ✅ Clientes encontrados: " + encontrados);
+		System.out.println("   ❌ Clientes no encontrados: " + noEncontrados);
+		
+		if (total > 0) {
+			double porcentajeExito = (encontrados * 100.0) / total;
+			System.out.println("   📈 Porcentaje de éxito: " + String.format("%.1f%%", porcentajeExito));
+		}
+		
+		System.out.println();
+		System.out.println("💡 VENTAJAS DE LAS SENTENCIAS PREPARADAS:");
+		System.out.println("   🔒 Protección contra inyección SQL");
+		System.out.println("   🚀 Mejor rendimiento al reutilizar la consulta compilada");
+		System.out.println("   🎯 Código más limpio y mantenible");
+		System.out.println("   ✅ Manejo automático de tipos de datos y caracteres especiales");
+		System.out.println("=================================================================");
+	}
+
+	/**
+	 * Método de demostración que compara diferentes enfoques de consulta.
+	 * Muestra las diferencias entre Statement normal vs PreparedStatement.
+	 */
+	public void demostrarVentajasPreparedStatement() throws SQLException {
+		System.out.println("=== DEMOSTRACIÓN: PREPARED STATEMENT VS STATEMENT NORMAL ===");
+		
+		String[] dnisPrueba = {"78901234X", "89012345E"};
+		
+		System.out.println("⚠️  ENFOQUE INSEGURO - Statement Normal (NO recomendado):");
+		System.out.println("   String sql = \"SELECT * FROM CLIENTES WHERE DNI = '\" + dni + \"'\";");
+		System.out.println("   ❌ Vulnerable a inyección SQL");
+		System.out.println("   ❌ Menos eficiente (recompila cada vez)");
+		System.out.println();
+		
+		System.out.println("✅ ENFOQUE SEGURO - PreparedStatement (RECOMENDADO):");
+		System.out.println("   String sql = \"SELECT * FROM CLIENTES WHERE DNI = ?\";");
+		System.out.println("   ✅ Protegido contra inyección SQL");
+		System.out.println("   ✅ Más eficiente (precompilado)");
+		System.out.println();
+		
+		// Demostrar el uso correcto con PreparedStatement
+		String sql = "SELECT * FROM CLIENTES WHERE DNI = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			
+			for (String dni : dnisPrueba) {
+				System.out.println("🔍 Consultando DNI: " + dni);
+				
+				// Forma segura: usar setString para evitar inyección SQL
+				pstmt.setString(1, dni);
+				
+				try (ResultSet rs = pstmt.executeQuery()) {
+					if (rs.next()) {
+						System.out.println("   ✅ Cliente: " + rs.getString("APELLIDOS"));
+					} else {
+						System.out.println("   ❌ No encontrado");
+					}
+				}
+			}
+		}
+		
+		System.out.println("\n💡 BUENAS PRÁCTICAS IMPLEMENTADAS:");
+		System.out.println("   🔹 Usar try-with-resources para gestión automática de recursos");
+		System.out.println("   🔹 Una sola PreparedStatement reutilizada múltiples veces");
+		System.out.println("   🔹 Validación de datos de entrada");
+		System.out.println("   🔹 Manejo adecuado de valores NULL");
+		System.out.println("   🔹 Comentarios claros explicando cada paso");
+		System.out.println("===================================================");
+	}
+
+	/**
+	 * =================== ACTIVIDAD 4.6 ===================
+	 * Métodos para gestión de la tabla COMPANIES y operaciones batch.
+	 */
+
+	/**
+	 * ACTIVIDAD 4.6 - Método 1: Crear tabla COMPANIES.
+	 * Crea la tabla COMPANIES con los campos especificados si no existe.
+	 * 
+	 * Estructura de la tabla:
+	 * - CIF: VARCHAR(9) PRIMARY KEY - Código de identificación fiscal (8 números + 1 letra)
+	 * - NOMBRE: VARCHAR(255) NOT NULL - Nombre de la compañía
+	 * - SECTOR: VARCHAR(100) NOT NULL - Sector al que se dedica la compañía
+	 * 
+	 * @throws SQLException Si ocurre un error al crear la tabla
+	 */
+	public void crearTablaCompanies() throws SQLException {
+		System.out.println("=== ACTIVIDAD 4.6 - Creación de Tabla COMPANIES ===");
+		
+		// SQL para crear la tabla COMPANIES
+		String sqlCrearTabla = """
+			CREATE TABLE IF NOT EXISTS COMPANIES (
+				CIF VARCHAR(9) PRIMARY KEY COMMENT 'Código de Identificación Fiscal (8 números + 1 letra)',
+				NOMBRE VARCHAR(255) NOT NULL COMMENT 'Nombre de la compañía',
+				SECTOR VARCHAR(100) NOT NULL COMMENT 'Sector al que se dedica la compañía',
+				CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de creación del registro'
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+			  COMMENT='Tabla que almacena información de compañías'
+		""";
+		
+		try (java.sql.Statement stmt = connection.createStatement()) {
+			System.out.println("🔧 Creando tabla COMPANIES...");
+			stmt.execute(sqlCrearTabla);
+			System.out.println("✅ Tabla COMPANIES creada exitosamente (o ya existía)");
+			
+			// Mostrar estructura de la tabla
+			mostrarEstructuraTabla("COMPANIES");
+			
+		} catch (SQLException e) {
+			System.err.println("❌ Error al crear la tabla COMPANIES: " + e.getMessage());
+			throw e;
+		}
+		
+		System.out.println("=============================================");
+	}
+
+	/**
+	 * ACTIVIDAD 4.6 - Método 2: Insertar compañías en modo batch con transacción controlada.
+	 * 
+	 * Este método implementa las mejores prácticas para inserciones masivas:
+	 * - Uso de PreparedStatement para seguridad contra inyección SQL
+	 * - Operaciones batch para mejor rendimiento
+	 * - Transacciones controladas con commit/rollback automático
+	 * - Validación de datos antes de la inserción
+	 * - Manejo robusto de errores
+	 * 
+	 * @param companies Lista de compañías a insertar
+	 * @return Número de compañías insertadas exitosamente
+	 * @throws SQLException Si ocurre un error irrecuperable
+	 */
+	public int insertarCompaniesEnBatch(List<Company> companies) throws SQLException {
+		// Validación inicial
+		if (companies == null || companies.isEmpty()) {
+			System.out.println("⚠️ No se proporcionaron compañías para insertar.");
+			return 0;
+		}
+
+		System.out.println("=== ACTIVIDAD 4.6 - Inserción Batch de Compañías ===");
+		System.out.println("📊 Preparando inserción de " + companies.size() + " compañía(s)...");
+
+		// SQL de inserción con parámetros
+		String sqlInsert = "INSERT INTO COMPANIES (CIF, NOMBRE, SECTOR) VALUES (?, ?, ?)";
+		
+		// Variables para estadísticas
+		int companiesValidadas = 0;
+		int companiesInsertadas = 0;
+		List<String> erroresValidacion = new ArrayList<>();
+
+		// Guardar el estado original del autoCommit
+		boolean autoCommitOriginal = connection.getAutoCommit();
+		
+		try {
+			// Desactivar autoCommit para control manual de transacciones
+			connection.setAutoCommit(false);
+			System.out.println("🔄 Transacción iniciada (autoCommit = false)");
+
+			try (PreparedStatement pstmt = connection.prepareStatement(sqlInsert)) {
+				
+				// Validar y preparar cada compañía para el batch
+				for (int i = 0; i < companies.size(); i++) {
+					Company company = companies.get(i);
+					
+					System.out.println("🔍 Validando compañía " + (i + 1) + "/" + companies.size() + ": " + 
+									 (company != null ? company.getCif() : "null"));
+					
+					// Validación completa de la compañía
+					String errorValidacion = validarCompany(company);
+					if (errorValidacion != null) {
+						erroresValidacion.add("Compañía " + (i + 1) + ": " + errorValidacion);
+						System.out.println("   ❌ " + errorValidacion);
+						continue;
+					}
+					
+					// Agregar al batch si la validación fue exitosa
+					pstmt.setString(1, company.getCif().toUpperCase().trim());
+					pstmt.setString(2, company.getNombre().trim());
+					pstmt.setString(3, company.getSector().trim());
+					pstmt.addBatch();
+					
+					companiesValidadas++;
+					System.out.println("   ✅ Compañía válida agregada al batch");
+				}
+
+				// Verificar si hay compañías válidas para insertar
+				if (companiesValidadas == 0) {
+					System.out.println("❌ No hay compañías válidas para insertar");
+					connection.rollback();
+					return 0;
+				}
+
+				System.out.println("\n🚀 Ejecutando batch de " + companiesValidadas + " compañía(s)...");
+				
+				// Ejecutar el batch
+				int[] resultados = pstmt.executeBatch();
+				
+				// Analizar resultados del batch
+				for (int i = 0; i < resultados.length; i++) {
+					if (resultados[i] > 0 || resultados[i] == java.sql.Statement.SUCCESS_NO_INFO) {
+						companiesInsertadas++;
+					}
+				}
+
+				// Si todo salió bien, confirmar la transacción
+				connection.commit();
+				System.out.println("✅ TRANSACCIÓN CONFIRMADA (COMMIT)");
+				
+				// Mostrar estadísticas finales
+				mostrarEstadisticasInsercion(companies.size(), companiesValidadas, 
+										   companiesInsertadas, erroresValidacion);
+
+			} catch (SQLException e) {
+				// Error durante la ejecución del batch - hacer rollback
+				System.err.println("❌ Error durante la inserción batch: " + e.getMessage());
+				connection.rollback();
+				System.err.println("🔄 TRANSACCIÓN REVERTIDA (ROLLBACK)");
+				throw e;
+			}
+
+		} finally {
+			// Restaurar el estado original del autoCommit
+			connection.setAutoCommit(autoCommitOriginal);
+			System.out.println("🔄 AutoCommit restaurado a: " + autoCommitOriginal);
+		}
+
+		return companiesInsertadas;
+	}
+
+	/**
+	 * Método auxiliar para validar una compañía antes de la inserción.
+	 * 
+	 * @param company Compañía a validar
+	 * @return null si es válida, mensaje de error si no es válida
+	 */
+	private String validarCompany(Company company) {
+		if (company == null) {
+			return "Compañía es null";
+		}
+		
+		if (!company.isComplete()) {
+			return "Compañía incompleta (faltan campos obligatorios)";
+		}
+		
+		if (!company.isValidCif()) {
+			return "CIF inválido (debe tener 8 números + 1 letra): " + company.getCif();
+		}
+		
+		if (company.getNombre().length() > 255) {
+			return "Nombre demasiado largo (máximo 255 caracteres)";
+		}
+		
+		if (company.getSector().length() > 100) {
+			return "Sector demasiado largo (máximo 100 caracteres)";
+		}
+		
+		return null; // Validación exitosa
+	}
+
+	/**
+	 * Método auxiliar para mostrar la estructura de una tabla.
+	 * 
+	 * @param nombreTabla Nombre de la tabla a describir
+	 */
+	private void mostrarEstructuraTabla(String nombreTabla) throws SQLException {
+		String sqlDescribe = "DESCRIBE " + nombreTabla;
+		
+		System.out.println("\n📋 Estructura de la tabla " + nombreTabla + ":");
+		System.out.println("Campo\t\tTipo\t\tNull\tKey\tDefault");
+		System.out.println("------------------------------------------------------------");
+		
+		try (java.sql.Statement stmt = connection.createStatement();
+			 ResultSet rs = stmt.executeQuery(sqlDescribe)) {
+			
+			while (rs.next()) {
+				System.out.printf("%-15s %-15s %-8s %-8s %s%n",
+					rs.getString("Field"),
+					rs.getString("Type"),
+					rs.getString("Null"),
+					rs.getString("Key"),
+					rs.getString("Default"));
+			}
+		}
+		System.out.println();
+	}
+
+	/**
+	 * Método auxiliar para mostrar estadísticas de la inserción.
+	 */
+	private void mostrarEstadisticasInsercion(int total, int validadas, int insertadas, 
+											List<String> errores) {
+		System.out.println("\n📊 ESTADÍSTICAS DE INSERCIÓN:");
+		System.out.println("   📝 Total de compañías procesadas: " + total);
+		System.out.println("   ✅ Compañías validadas: " + validadas);
+		System.out.println("   💾 Compañías insertadas: " + insertadas);
+		System.out.println("   ❌ Compañías rechazadas: " + (total - validadas));
+		
+		if (total > 0) {
+			double porcentajeExito = (insertadas * 100.0) / total;
+			System.out.println("   📈 Porcentaje de éxito: " + String.format("%.1f%%", porcentajeExito));
+		}
+		
+		if (!errores.isEmpty()) {
+			System.out.println("\n⚠️ ERRORES DE VALIDACIÓN:");
+			for (String error : errores) {
+				System.out.println("   • " + error);
+			}
+		}
+		
+		System.out.println("\n💡 VENTAJAS DEL MÉTODO IMPLEMENTADO:");
+		System.out.println("   🔒 Seguridad: PreparedStatement previene inyección SQL");
+		System.out.println("   🚀 Rendimiento: Operaciones batch para inserciones masivas");
+		System.out.println("   🛡️ Robustez: Transacciones controladas con rollback automático");
+		System.out.println("   ✅ Validación: Verificación completa de datos antes de insertar");
+		System.out.println("   📊 Información: Estadísticas detalladas del proceso");
+		System.out.println("=======================================================");
+	}
+
+	/**
+	 * Método auxiliar para consultar y mostrar las compañías insertadas.
+	 * 
+	 * @throws SQLException Si ocurre un error en la consulta
+	 */
+	public void mostrarCompaniesInsertadas() throws SQLException {
+		System.out.println("=== COMPAÑÍAS EN LA BASE DE DATOS ===");
+		
+		String sql = "SELECT CIF, NOMBRE, SECTOR, CREATED_AT FROM COMPANIES ORDER BY CREATED_AT DESC";
+		
+		try (java.sql.Statement stmt = connection.createStatement();
+			 ResultSet rs = stmt.executeQuery(sql)) {
+			
+			System.out.println("CIF\t\tNOMBRE\t\t\tSECTOR\t\tFECHA CREACIÓN");
+			System.out.println("-------------------------------------------------------------------------");
+			
+			int contador = 0;
+			while (rs.next()) {
+				contador++;
+				System.out.printf("%-12s %-25s %-20s %s%n",
+					rs.getString("CIF"),
+					rs.getString("NOMBRE"),
+					rs.getString("SECTOR"),
+					rs.getTimestamp("CREATED_AT"));
+			}
+			
+			if (contador == 0) {
+				System.out.println("   No hay compañías registradas.");
+			} else {
+				System.out.println("\nTotal de compañías: " + contador);
+			}
+		}
+		
+		System.out.println("====================================");
+	}
+
+	/**
+	 * Método de demostración que muestra diferentes escenarios de batch insert.
+	 * Incluye casos de éxito, error y recuperación.
+	 */
+	public void demostrarEscenariosCompanies() throws SQLException {
+		System.out.println("=== DEMOSTRACIÓN: ESCENARIOS DE BATCH INSERT ===");
+		
+		// Escenario 1: Batch completamente válido
+		System.out.println("🎯 Escenario 1: Todas las compañías son válidas");
+		List<Company> companiesValidas = Arrays.asList(
+			new Company("10101010A", "Empresa Ejemplo 1", "Retail"),
+			new Company("20202020B", "Empresa Ejemplo 2", "Servicios"),
+			new Company("30303030C", "Empresa Ejemplo 3", "Industrial")
+		);
+		insertarCompaniesEnBatch(companiesValidas);
+		
+		// Escenario 2: Batch con errores mezclados
+		System.out.println("\n🎯 Escenario 2: Mezcla de válidas e inválidas");
+		List<Company> companiesMixtas = Arrays.asList(
+			new Company("40404040D", "Empresa Válida", "Tecnología"),
+			new Company("INVALID02", "CIF Malo", "Tech"), // CIF inválido
+			new Company("50505050E", "Otra Válida", "Consultoría")
+		);
+		insertarCompaniesEnBatch(companiesMixtas);
+		
+		// Escenario 3: Intento de duplicados (debería fallar por clave primaria)
+		System.out.println("\n🎯 Escenario 3: Intento de insertar duplicados");
+		List<Company> companiesDuplicadas = Arrays.asList(
+			new Company("10101010A", "Empresa Duplicada", "Retail") // CIF ya existe
+		);
+		
+		try {
+			insertarCompaniesEnBatch(companiesDuplicadas);
+		} catch (SQLException e) {
+			System.out.println("❌ Error esperado por duplicado: " + e.getMessage());
+			System.out.println("✅ El sistema maneja correctamente los duplicados");
+		}
+		
+		System.out.println("\n📊 Estado final de la tabla:");
+		mostrarCompaniesInsertadas();
+		
+		System.out.println("==============================================");
 	}
 
 	// Small helper for desired/existing data

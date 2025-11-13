@@ -204,6 +204,72 @@ public class Main {
             System.out.println("✅ ACTIVIDAD 4.4 COMPLETADA EXITOSAMENTE");
             System.out.println("=".repeat(60));
 
+            // ====== ACTIVIDAD 4.5: Consultar clientes con PreparedStatement ======
+            System.out.println("\n" + "=".repeat(60));
+            System.out.println("🔍 ACTIVIDAD 4.5: CONSULTA INDIVIDUAL CON PREPARED STATEMENT");
+            System.out.println("=".repeat(60));
+
+            // Ejemplo 1: Consultar clientes específicos por DNI
+            String[] dnisEspecificos = {
+                "78901234X",    // Cliente existente
+                "89012345E",    // Cliente existente  
+                "99999999Z",    // Cliente inexistente (para mostrar manejo de errores)
+                "56789012B"     // Cliente existente
+            };
+            
+            System.out.println("🎯 Ejemplo 1: Consultando clientes específicos");
+            dao.consultarClientesPorDNI(dnisEspecificos);
+
+            // Ejemplo 2: Consultar todos los clientes individualmente
+            System.out.println("🎯 Ejemplo 2: Consultando TODOS los clientes individualmente");
+            dao.consultarTodosLosClientesIndividualmente();
+
+            // Ejemplo 3: Demostración de buenas prácticas
+            System.out.println("🎯 Ejemplo 3: Demostración de buenas prácticas");
+            dao.demostrarVentajasPreparedStatement();
+
+            System.out.println("✅ ACTIVIDAD 4.5 COMPLETADA EXITOSAMENTE");
+
+            // ====== ACTIVIDAD 4.6: Tabla COMPANIES y operaciones batch ======
+            System.out.println("\n" + "=".repeat(60));
+            System.out.println("🏢 ACTIVIDAD 4.6: GESTIÓN DE COMPAÑÍAS CON BATCH");
+            System.out.println("=".repeat(60));
+
+            // Paso 1: Crear la tabla COMPANIES
+            dao.crearTablaCompanies();
+
+            // Paso 2: Preparar datos de ejemplo para insertar
+            List<id.morantesbryan.pojos.Company> companiesEjemplo = Arrays.asList(
+                // Compañías válidas
+                new id.morantesbryan.pojos.Company("12345678A", "Tecnología Innovadora S.L.", "Tecnología"),
+                new id.morantesbryan.pojos.Company("87654321B", "Consultoría Empresarial S.A.", "Consultoría"),
+                new id.morantesbryan.pojos.Company("11223344C", "Distribuciones del Norte", "Distribución"),
+                new id.morantesbryan.pojos.Company("55667788D", "Manufacturas Especializadas", "Manufactura"),
+                new id.morantesbryan.pojos.Company("99887766E", "Servicios Financieros Plus", "Finanzas"),
+                
+                // Compañías con errores para probar validación
+                new id.morantesbryan.pojos.Company("INVALID01", "CIF Inválido S.L.", "Tecnología"), // CIF inválido
+                new id.morantesbryan.pojos.Company("12345678F", "", "Tecnología"), // Nombre vacío
+                new id.morantesbryan.pojos.Company("12345678G", "Sin Sector S.L.", ""), // Sector vacío
+                null // Compañía null
+            );
+
+            System.out.println("🎯 Insertando compañías de ejemplo (incluye casos de error para demostración)");
+            
+            // Paso 3: Insertar compañías usando batch con transacción controlada
+            int companiesInsertadas = dao.insertarCompaniesEnBatch(companiesEjemplo);
+            
+            System.out.println("✅ Proceso completado. Compañías insertadas: " + companiesInsertadas);
+
+            // Paso 4: Mostrar las compañías insertadas
+            dao.mostrarCompaniesInsertadas();
+
+            // Paso 5: Demostración de escenarios avanzados
+            System.out.println("🎯 Demostrando escenarios avanzados de batch insert:");
+            dao.demostrarEscenariosCompanies();
+
+            System.out.println("✅ ACTIVIDAD 4.6 COMPLETADA EXITOSAMENTE");
+
             // Cerramos la conexion
             connection.close();
         } catch (Exception e) {
