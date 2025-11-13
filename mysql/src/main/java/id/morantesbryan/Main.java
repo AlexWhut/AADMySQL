@@ -172,6 +172,38 @@ public class Main {
 
             dao.insertarDatosConStatement(connection, INSERT_CLIENTES);
 
+            // ====== ACTIVIDAD 4.3: Mostrar empleados en orden inverso ======
+            // Descomenta las siguientes líneas para ejecutar la actividad 4.3
+            
+            // Método 1: Usando la consulta SQL original exacta y invirtiendo en Java
+            // dao.mostrarEmpleadosOrdenInverso();
+            
+            // Método 2: Alternativo más eficiente (con ORDER BY DESC)
+            // dao.mostrarEmpleadosOrdenInversoAlternativo();
+
+            // ====== ACTIVIDAD 4.4: Contar filas sin recorrer ResultSet ======
+            // Descomenta las siguientes líneas para ejecutar la actividad 4.4
+            
+            System.out.println("\n" + "=".repeat(60));
+            System.out.println("🧮 ACTIVIDAD 4.4: CONTAR FILAS SIN RECORRER RESULTSET");
+            System.out.println("=".repeat(60));
+            
+            // Método 1: ResultSet Scrollable con last() y getRow()
+            dao.contarFilasConScrollableResultSet();
+            
+            // Método 2: Consulta COUNT separada (más eficiente)
+            dao.contarFilasConConsultaCount();
+            
+            // Método 3: Comparativo de rendimiento
+            dao.compararMetodosConteo();
+            
+            // Método 4: Explicación detallada de las técnicas
+            dao.explicarTecnicasConteoFilas();
+
+            System.out.println("\n" + "=".repeat(60));
+            System.out.println("✅ ACTIVIDAD 4.4 COMPLETADA EXITOSAMENTE");
+            System.out.println("=".repeat(60));
+
             // Cerramos la conexion
             connection.close();
         } catch (Exception e) {
