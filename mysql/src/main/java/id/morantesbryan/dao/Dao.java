@@ -260,11 +260,11 @@ public class Dao {
 			// Ir al final del ResultSet
 			if (rs.last()) {
 				int numeroFilas = rs.getRow();
-				System.out.println("✅ Número de filas obtenidas: " + numeroFilas);
+				System.out.println("Número de filas obtenidas: " + numeroFilas);
 				
 				// Volver al principio para mostrar algunos datos de ejemplo
 				rs.beforeFirst();
-				System.out.println("\n📋 Primeras filas de ejemplo:");
+				System.out.println("\nPrimeras filas de ejemplo:");
 				System.out.println("DNI\t\tAPELLIDOS\tCP");
 				System.out.println("----------------------------------------");
 				
@@ -280,7 +280,7 @@ public class Dao {
 					System.out.println("... y " + (numeroFilas - 3) + " filas más");
 				}
 			} else {
-				System.out.println("❌ No hay datos en la consulta");
+				System.out.println("No hay datos en la consulta");
 			}
 		}
 		System.out.println("=====================================================");
@@ -304,13 +304,13 @@ public class Dao {
 			
 			if (rsCount.next()) {
 				int numeroFilas = rsCount.getInt("total");
-				System.out.println("✅ Número de filas (sin recorrer): " + numeroFilas);
+				System.out.println("Número de filas (sin recorrer): " + numeroFilas);
 				
 				// Ahora ejecutamos la consulta original para mostrar algunos datos
 				try (java.sql.Statement stmtData = connection.createStatement();
 					 ResultSet rsData = stmtData.executeQuery(sqlOriginal)) {
 					
-					System.out.println("\n📋 Datos de ejemplo de la consulta:");
+					System.out.println("\nDatos de ejemplo de la consulta:");
 					System.out.println("DNI\t\tAPELLIDOS\tCP");
 					System.out.println("----------------------------------------");
 					
@@ -353,7 +353,7 @@ public class Dao {
 				filasScrollable = rs.getRow();
 			}
 			long tiempoScrollable = System.currentTimeMillis() - inicioScrollable;
-			System.out.println("🔄 Método Scrollable:");
+			System.out.println("Método Scrollable:");
 			System.out.println("   - Filas encontradas: " + filasScrollable);
 			System.out.println("   - Tiempo: " + tiempoScrollable + " ms");
 		}
@@ -368,7 +368,7 @@ public class Dao {
 				filasCount = rs.getInt(1);
 			}
 			long tiempoCount = System.currentTimeMillis() - inicioCount;
-			System.out.println("📊 Método COUNT:");
+			System.out.println("Método COUNT:");
 			System.out.println("   - Filas encontradas: " + filasCount);
 			System.out.println("   - Tiempo: " + tiempoCount + " ms");
 		}
@@ -383,12 +383,12 @@ public class Dao {
 				filasTradicional++;
 			}
 			long tiempoTradicional = System.currentTimeMillis() - inicioTradicional;
-			System.out.println("🐌 Método Tradicional (recorriendo):");
+			System.out.println(" Método Tradicional (recorriendo):");
 			System.out.println("   - Filas encontradas: " + filasTradicional);
 			System.out.println("   - Tiempo: " + tiempoTradicional + " ms");
 		}
 		
-		System.out.println("\n💡 Recomendación: El método COUNT es generalmente el más eficiente");
+		System.out.println("\n Recomendación: El método COUNT es generalmente el más eficiente");
 		System.out.println("   para obtener solo el número de filas.");
 		System.out.println("========================================================");
 	}
@@ -402,16 +402,16 @@ public class Dao {
 		
 		String consulta = "SELECT DNI, APELLIDOS, CP FROM CLIENTES WHERE CP IS NOT NULL";
 		
-		System.out.println("📋 Consulta de ejemplo: " + consulta);
+		System.out.println(" Consulta de ejemplo: " + consulta);
 		System.out.println();
 		
 		// 1. TÉCNICA SCROLLABLE RESULTSET
-		System.out.println("🔄 TÉCNICA 1: ResultSet Scrollable");
-		System.out.println("   ✅ Ventajas:");
+		System.out.println(" TÉCNICA 1: ResultSet Scrollable");
+		System.out.println("    Ventajas:");
 		System.out.println("      - Obtiene el conteo sin recorrer fila por fila");
 		System.out.println("      - Permite navegar hacia adelante y atrás");
 		System.out.println("      - Útil cuando necesitas tanto el conteo como los datos");
-		System.out.println("   ❌ Desventajas:");
+		System.out.println("    Desventajas:");
 		System.out.println("      - Consume más memoria (almacena todo el ResultSet)");
 		System.out.println("      - No todos los drivers JDBC lo soportan completamente");
 		System.out.println("      - Puede ser más lento con grandes volúmenes de datos");
@@ -422,20 +422,20 @@ public class Dao {
 			 ResultSet rs = stmt.executeQuery(consulta)) {
 			
 			if (rs.last()) {
-				System.out.println("   📊 Resultado: " + rs.getRow() + " filas");
+				System.out.println("    Resultado: " + rs.getRow() + " filas");
 			}
 		}
 		
 		System.out.println();
 		
 		// 2. TÉCNICA COUNT QUERY
-		System.out.println("📊 TÉCNICA 2: Consulta COUNT Separada");
-		System.out.println("   ✅ Ventajas:");
+		System.out.println(" TÉCNICA 2: Consulta COUNT Separada");
+		System.out.println("    Ventajas:");
 		System.out.println("      - MÁS EFICIENTE para solo obtener el conteo");
 		System.out.println("      - Consume mínima memoria y ancho de banda");
 		System.out.println("      - Optimizada por el motor de base de datos");
 		System.out.println("      - Funciona con cualquier driver JDBC");
-		System.out.println("   ❌ Desventajas:");
+		System.out.println("    Desventajas:");
 		System.out.println("      - Requiere dos consultas si también necesitas los datos");
 		System.out.println("      - Los datos pueden cambiar entre consultas");
 		
@@ -445,14 +445,14 @@ public class Dao {
 			 ResultSet rs = stmt.executeQuery(consultaCount)) {
 			
 			if (rs.next()) {
-				System.out.println("   📊 Resultado: " + rs.getInt(1) + " filas");
+				System.out.println("    Resultado: " + rs.getInt(1) + " filas");
 			}
 		}
 		
 		System.out.println();
 		
 		// 3. CUÁNDO USAR CADA MÉTODO
-		System.out.println("🎯 RECOMENDACIONES DE USO:");
+		System.out.println(" RECOMENDACIONES DE USO:");
 		System.out.println("   🔹 Usa COUNT cuando:");
 		System.out.println("      - Solo necesitas el número de filas");
 		System.out.println("      - Trabajas con grandes volúmenes de datos");
@@ -480,18 +480,18 @@ public class Dao {
 	public void consultarClientesPorDNI(String[] dnis) throws SQLException {
 		// Validación de entrada
 		if (dnis == null || dnis.length == 0) {
-			System.out.println("❌ No se proporcionaron DNIs para consultar.");
+			System.out.println("  No se proporcionaron DNIs para consultar.");
 			return;
 		}
 
 		System.out.println("=== ACTIVIDAD 4.5 - CONSULTA DE CLIENTES CON PREPARED STATEMENT ===");
-		System.out.println("📋 Consultando " + dnis.length + " cliente(s) individualmente...");
+		System.out.println("  Consultando " + dnis.length + " cliente(s) individualmente...");
 		System.out.println();
 
 		// Sentencia SQL preparada - La consulta SELECT con parámetro ?
 		// El ? será reemplazado por cada DNI específico en cada iteración
 		String sqlConsulta = "SELECT * FROM CLIENTES WHERE DNI = ?";
-		System.out.println("🔍 Consulta SQL: " + sqlConsulta);
+		System.out.println("  Consulta SQL: " + sqlConsulta);
 		System.out.println();
 
 		// Crear la sentencia preparada UNA SOLA VEZ fuera del bucle
@@ -506,11 +506,11 @@ public class Dao {
 			for (int i = 0; i < dnis.length; i++) {
 				String dniActual = dnis[i];
 				
-				System.out.println("🔎 Consulta " + (i + 1) + "/" + dnis.length + " - DNI: " + dniActual);
+				System.out.println("  Consulta " + (i + 1) + "/" + dnis.length + " - DNI: " + dniActual);
 				
 				// Validar que el DNI no sea nulo o vacío
 				if (dniActual == null || dniActual.trim().isEmpty()) {
-					System.out.println("   ⚠️  DNI inválido (nulo o vacío) - Saltando...");
+					System.out.println("      DNI inválido (nulo o vacío) - Saltando...");
 					clientesNoEncontrados++;
 					System.out.println();
 					continue;
@@ -535,7 +535,7 @@ public class Dao {
 						String cpTexto = rs.wasNull() ? "null" : String.valueOf(cp);
 						
 						// Mostrar los datos del cliente encontrado
-						System.out.println("   ✅ Cliente encontrado:");
+						System.out.println("     Cliente encontrado:");
 						System.out.println("      - DNI: " + dni);
 						System.out.println("      - Apellidos: " + apellidos);
 						System.out.println("      - CP: " + cpTexto);
@@ -543,7 +543,7 @@ public class Dao {
 						clientesEncontrados++;
 					} else {
 						// No se encontró ningún cliente con ese DNI
-						System.out.println("   ❌ Cliente no encontrado en la base de datos");
+						System.out.println("     Cliente no encontrado en la base de datos");
 						clientesNoEncontrados++;
 					}
 				}
@@ -577,7 +577,7 @@ public class Dao {
 		}
 
 		if (listaDnis.isEmpty()) {
-			System.out.println("❌ No hay clientes en la tabla CLIENTES.");
+			System.out.println("  No hay clientes en la tabla CLIENTES.");
 			return;
 		}
 
@@ -597,22 +597,22 @@ public class Dao {
 	 * @param total Total de consultas realizadas
 	 */
 	private void mostrarResumenConsulta(int encontrados, int noEncontrados, int total) {
-		System.out.println("📊 RESUMEN DE CONSULTAS:");
-		System.out.println("   🎯 Total de consultas realizadas: " + total);
-		System.out.println("   ✅ Clientes encontrados: " + encontrados);
-		System.out.println("   ❌ Clientes no encontrados: " + noEncontrados);
+		System.out.println(" RESUMEN DE CONSULTAS:");
+		System.out.println("    Total de consultas realizadas: " + total);
+		System.out.println("    Clientes encontrados: " + encontrados);
+		System.out.println("    Clientes no encontrados: " + noEncontrados);
 		
 		if (total > 0) {
 			double porcentajeExito = (encontrados * 100.0) / total;
-			System.out.println("   📈 Porcentaje de éxito: " + String.format("%.1f%%", porcentajeExito));
+			System.out.println("    Porcentaje de éxito: " + String.format("%.1f%%", porcentajeExito));
 		}
 		
 		System.out.println();
-		System.out.println("💡 VENTAJAS DE LAS SENTENCIAS PREPARADAS:");
-		System.out.println("   🔒 Protección contra inyección SQL");
-		System.out.println("   🚀 Mejor rendimiento al reutilizar la consulta compilada");
-		System.out.println("   🎯 Código más limpio y mantenible");
-		System.out.println("   ✅ Manejo automático de tipos de datos y caracteres especiales");
+		System.out.println("  VENTAJAS DE LAS SENTENCIAS PREPARADAS:");
+		System.out.println("    Protección contra inyección SQL");
+		System.out.println("    Mejor rendimiento al reutilizar la consulta compilada");
+		System.out.println("    Código más limpio y mantenible");
+		System.out.println("    Manejo automático de tipos de datos y caracteres especiales");
 		System.out.println("=================================================================");
 	}
 
@@ -697,15 +697,15 @@ public class Dao {
 		""";
 		
 		try (java.sql.Statement stmt = connection.createStatement()) {
-			System.out.println("🔧 Creando tabla COMPANIES...");
+			System.out.println("Creando tabla COMPANIES...");
 			stmt.execute(sqlCrearTabla);
-			System.out.println("✅ Tabla COMPANIES creada exitosamente (o ya existía)");
+			System.out.println("Tabla COMPANIES creada exitosamente (o ya existía)");
 			
 			// Mostrar estructura de la tabla
 			mostrarEstructuraTabla("COMPANIES");
 			
 		} catch (SQLException e) {
-			System.err.println("❌ Error al crear la tabla COMPANIES: " + e.getMessage());
+			System.err.println("Error al crear la tabla COMPANIES: " + e.getMessage());
 			throw e;
 		}
 		
@@ -721,6 +721,7 @@ public class Dao {
 	 * - Transacciones controladas con commit/rollback automático
 	 * - Validación de datos antes de la inserción
 	 * - Manejo robusto de errores
+	 * - Verificación de duplicados antes de insertar
 	 * 
 	 * @param companies Lista de compañías a insertar
 	 * @return Número de compañías insertadas exitosamente
@@ -729,12 +730,15 @@ public class Dao {
 	public int insertarCompaniesEnBatch(List<Company> companies) throws SQLException {
 		// Validación inicial
 		if (companies == null || companies.isEmpty()) {
-			System.out.println("⚠️ No se proporcionaron compañías para insertar.");
+			System.out.println("No se proporcionaron compañías para insertar.");
 			return 0;
 		}
 
 		System.out.println("=== ACTIVIDAD 4.6 - Inserción Batch de Compañías ===");
-		System.out.println("📊 Preparando inserción de " + companies.size() + " compañía(s)...");
+		System.out.println("Preparando inserción de " + companies.size() + " compañía(s)...");
+
+		// Primero limpiar tabla para evitar duplicados en las pruebas
+		limpiarTablaCompaniesParaPruebas();
 
 		// SQL de inserción con parámetros
 		String sqlInsert = "INSERT INTO COMPANIES (CIF, NOMBRE, SECTOR) VALUES (?, ?, ?)";
@@ -750,7 +754,7 @@ public class Dao {
 		try {
 			// Desactivar autoCommit para control manual de transacciones
 			connection.setAutoCommit(false);
-			System.out.println("🔄 Transacción iniciada (autoCommit = false)");
+			System.out.println("Transacción iniciada (autoCommit = false)");
 
 			try (PreparedStatement pstmt = connection.prepareStatement(sqlInsert)) {
 				
@@ -758,14 +762,14 @@ public class Dao {
 				for (int i = 0; i < companies.size(); i++) {
 					Company company = companies.get(i);
 					
-					System.out.println("🔍 Validando compañía " + (i + 1) + "/" + companies.size() + ": " + 
+					System.out.println("Validando compañía " + (i + 1) + "/" + companies.size() + ": " + 
 									 (company != null ? company.getCif() : "null"));
 					
 					// Validación completa de la compañía
-					String errorValidacion = validarCompany(company);
+					String errorValidacion = validarCompanyCompleta(company);
 					if (errorValidacion != null) {
 						erroresValidacion.add("Compañía " + (i + 1) + ": " + errorValidacion);
-						System.out.println("   ❌ " + errorValidacion);
+						System.out.println("   ERROR: " + errorValidacion);
 						continue;
 					}
 					
@@ -776,17 +780,17 @@ public class Dao {
 					pstmt.addBatch();
 					
 					companiesValidadas++;
-					System.out.println("   ✅ Compañía válida agregada al batch");
+					System.out.println("   OK: Compañía válida agregada al batch");
 				}
 
 				// Verificar si hay compañías válidas para insertar
 				if (companiesValidadas == 0) {
-					System.out.println("❌ No hay compañías válidas para insertar");
+					System.out.println("No hay compañías válidas para insertar");
 					connection.rollback();
 					return 0;
 				}
 
-				System.out.println("\n🚀 Ejecutando batch de " + companiesValidadas + " compañía(s)...");
+				System.out.println("\nEjecutando batch de " + companiesValidadas + " compañía(s)...");
 				
 				// Ejecutar el batch
 				int[] resultados = pstmt.executeBatch();
@@ -800,7 +804,7 @@ public class Dao {
 
 				// Si todo salió bien, confirmar la transacción
 				connection.commit();
-				System.out.println("✅ TRANSACCIÓN CONFIRMADA (COMMIT)");
+				System.out.println("TRANSACCIÓN CONFIRMADA (COMMIT)");
 				
 				// Mostrar estadísticas finales
 				mostrarEstadisticasInsercion(companies.size(), companiesValidadas, 
@@ -808,19 +812,70 @@ public class Dao {
 
 			} catch (SQLException e) {
 				// Error durante la ejecución del batch - hacer rollback
-				System.err.println("❌ Error durante la inserción batch: " + e.getMessage());
+				System.err.println("Error durante la inserción batch: " + e.getMessage());
 				connection.rollback();
-				System.err.println("🔄 TRANSACCIÓN REVERTIDA (ROLLBACK)");
+				System.err.println("TRANSACCIÓN REVERTIDA (ROLLBACK)");
 				throw e;
 			}
 
 		} finally {
 			// Restaurar el estado original del autoCommit
 			connection.setAutoCommit(autoCommitOriginal);
-			System.out.println("🔄 AutoCommit restaurado a: " + autoCommitOriginal);
+			System.out.println("AutoCommit restaurado a: " + autoCommitOriginal);
 		}
 
 		return companiesInsertadas;
+	}
+
+	/**
+	 * Limpia la tabla COMPANIES para pruebas (elimina datos de pruebas anteriores).
+	 */
+	private void limpiarTablaCompaniesParaPruebas() throws SQLException {
+		String sqlLimpiar = "DELETE FROM COMPANIES WHERE CIF IN ('12345678A','87654321B','11223344C','55667788D','99887766E')";
+		
+		try (java.sql.Statement stmt = connection.createStatement()) {
+			int eliminados = stmt.executeUpdate(sqlLimpiar);
+			if (eliminados > 0) {
+				System.out.println("Eliminados " + eliminados + " registros de pruebas anteriores");
+			}
+		}
+	}
+
+	/**
+	 * Validación completa incluyendo verificación de duplicados.
+	 */
+	private String validarCompanyCompleta(Company company) throws SQLException {
+		// Validación básica
+		String errorBasico = validarCompany(company);
+		if (errorBasico != null) {
+			return errorBasico;
+		}
+
+		// Verificar si ya existe el CIF
+		if (existeCifEnBD(company.getCif())) {
+			return "CIF ya existe en la base de datos: " + company.getCif();
+		}
+
+		return null; // Validación exitosa
+	}
+
+	/**
+	 * Verifica si un CIF ya existe en la base de datos.
+	 */
+	private boolean existeCifEnBD(String cif) throws SQLException {
+		String sql = "SELECT COUNT(*) FROM COMPANIES WHERE CIF = ?";
+		
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setString(1, cif.toUpperCase().trim());
+			
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					return rs.getInt(1) > 0;
+				}
+			}
+		}
+		
+		return false;
 	}
 
 	/**
@@ -861,7 +916,7 @@ public class Dao {
 	private void mostrarEstructuraTabla(String nombreTabla) throws SQLException {
 		String sqlDescribe = "DESCRIBE " + nombreTabla;
 		
-		System.out.println("\n📋 Estructura de la tabla " + nombreTabla + ":");
+		System.out.println("\nEstructura de la tabla " + nombreTabla + ":");
 		System.out.println("Campo\t\tTipo\t\tNull\tKey\tDefault");
 		System.out.println("------------------------------------------------------------");
 		
@@ -885,30 +940,30 @@ public class Dao {
 	 */
 	private void mostrarEstadisticasInsercion(int total, int validadas, int insertadas, 
 											List<String> errores) {
-		System.out.println("\n📊 ESTADÍSTICAS DE INSERCIÓN:");
-		System.out.println("   📝 Total de compañías procesadas: " + total);
-		System.out.println("   ✅ Compañías validadas: " + validadas);
-		System.out.println("   💾 Compañías insertadas: " + insertadas);
-		System.out.println("   ❌ Compañías rechazadas: " + (total - validadas));
+		System.out.println("\nESTADÍSTICAS DE INSERCIÓN:");
+		System.out.println("   Total de compañías procesadas: " + total);
+		System.out.println("   Compañías validadas: " + validadas);
+		System.out.println("   Compañías insertadas: " + insertadas);
+		System.out.println("   Compañías rechazadas: " + (total - validadas));
 		
 		if (total > 0) {
 			double porcentajeExito = (insertadas * 100.0) / total;
-			System.out.println("   📈 Porcentaje de éxito: " + String.format("%.1f%%", porcentajeExito));
+			System.out.println("   Porcentaje de éxito: " + String.format("%.1f%%", porcentajeExito));
 		}
 		
 		if (!errores.isEmpty()) {
-			System.out.println("\n⚠️ ERRORES DE VALIDACIÓN:");
+			System.out.println("\nERRORES DE VALIDACIÓN:");
 			for (String error : errores) {
-				System.out.println("   • " + error);
+				System.out.println("   - " + error);
 			}
 		}
 		
-		System.out.println("\n💡 VENTAJAS DEL MÉTODO IMPLEMENTADO:");
-		System.out.println("   🔒 Seguridad: PreparedStatement previene inyección SQL");
-		System.out.println("   🚀 Rendimiento: Operaciones batch para inserciones masivas");
-		System.out.println("   🛡️ Robustez: Transacciones controladas con rollback automático");
-		System.out.println("   ✅ Validación: Verificación completa de datos antes de insertar");
-		System.out.println("   📊 Información: Estadísticas detalladas del proceso");
+		System.out.println("\nVENTAJAS DEL MÉTODO IMPLEMENTADO:");
+		System.out.println("   Seguridad: PreparedStatement previene inyección SQL");
+		System.out.println("   Rendimiento: Operaciones batch para inserciones masivas");
+		System.out.println("   Robustez: Transacciones controladas con rollback automático");
+		System.out.println("   Validación: Verificación completa de datos antes de insertar");
+		System.out.println("   Información: Estadísticas detalladas del proceso");
 		System.out.println("=======================================================");
 	}
 
@@ -990,6 +1045,449 @@ public class Dao {
 		mostrarCompaniesInsertadas();
 		
 		System.out.println("==============================================");
+	}
+
+	/**
+	 * =================== ACTIVIDAD 4.7 ===================
+	 * Métodos para crear y utilizar funciones almacenadas en MySQL.
+	 */
+
+	/**
+	 * ACTIVIDAD 4.7 - Método 1: Crear función almacenada en MySQL.
+	 * 
+	 * Crea una función llamada 'obtener_apellidos_cliente' que:
+	 * - Recibe un parámetro DNI (VARCHAR(20))
+	 * - Devuelve los apellidos del cliente (VARCHAR(255))
+	 * - Retorna NULL si no se encuentra el cliente
+	 * 
+	 * SINTAXIS de función almacenada en MySQL:
+	 * CREATE FUNCTION nombre_funcion(parametros) RETURNS tipo_retorno
+	 * [DETERMINISTIC | NOT DETERMINISTIC]
+	 * [READS SQL DATA | MODIFIES SQL DATA | NO SQL | CONTAINS SQL]
+	 * BEGIN
+	 *   -- lógica de la función
+	 *   RETURN valor;
+	 * END
+	 * 
+	 * @throws SQLException Si ocurre un error al crear la función
+	 */
+	public void crearFuncionAlmacenadaObtenerApellidos() throws SQLException {
+		System.out.println("=== ACTIVIDAD 4.7 - Creación de Función Almacenada ===");
+		
+		// Primero, eliminar la función si ya existe (para evitar errores)
+		String sqlEliminarFuncion = "DROP FUNCTION IF EXISTS obtener_apellidos_cliente";
+		
+		// SQL para crear la función almacenada
+		String sqlCrearFuncion = """
+			CREATE FUNCTION obtener_apellidos_cliente(dni_param VARCHAR(20))
+			RETURNS VARCHAR(255)
+			READS SQL DATA
+			DETERMINISTIC
+			BEGIN
+				DECLARE apellidos_resultado VARCHAR(255);
+				
+				-- Consultar los apellidos del cliente por su DNI
+				SELECT APELLIDOS INTO apellidos_resultado
+				FROM CLIENTES 
+				WHERE DNI = dni_param;
+				
+				-- Devolver los apellidos encontrados (o NULL si no existe)
+				RETURN apellidos_resultado;
+			END
+		""";
+		
+		try (java.sql.Statement stmt = connection.createStatement()) {
+			
+			System.out.println("🗑️ Eliminando función existente (si la hay)...");
+			stmt.execute(sqlEliminarFuncion);
+			System.out.println("✅ Función anterior eliminada (o no existía)");
+			
+			System.out.println("🔧 Creando función almacenada 'obtener_apellidos_cliente'...");
+			stmt.execute(sqlCrearFuncion);
+			System.out.println("✅ Función almacenada creada exitosamente");
+			
+			// Mostrar información sobre la función creada
+			mostrarInformacionFuncion("obtener_apellidos_cliente");
+			
+		} catch (SQLException e) {
+			System.err.println("❌ Error al crear la función almacenada: " + e.getMessage());
+			System.err.println("💡 Asegúrate de que tu usuario MySQL tenga permisos para crear funciones");
+			System.err.println("💡 Ejecuta: SET GLOBAL log_bin_trust_function_creators = 1;");
+			throw e;
+		}
+		
+		System.out.println("===================================================");
+	}
+
+	/**
+	 * ACTIVIDAD 4.7 - Método 2: Llamar función almacenada desde Java.
+	 * 
+	 * Demuestra cómo llamar una función almacenada MySQL desde Java usando JDBC.
+	 * Las funciones almacenadas se llaman dentro de consultas SELECT, a diferencia 
+	 * de los procedimientos almacenados que se llaman con CALL.
+	 * 
+	 * @param dni DNI del cliente cuyos apellidos queremos obtener
+	 * @return Apellidos del cliente, o null si no se encuentra
+	 * @throws SQLException Si ocurre un error en la consulta
+	 */
+	public String llamarFuncionObtenerApellidos(String dni) throws SQLException {
+		// Validación de entrada
+		if (dni == null || dni.trim().isEmpty()) {
+			throw new IllegalArgumentException("El DNI no puede ser nulo o vacío");
+		}
+		
+		System.out.println(" Llamando función almacenada para DNI: " + dni);
+		
+		// SQL para llamar la función almacenada
+		// NOTA: Las funciones se llaman dentro de SELECT, no con CALL
+		String sqlLlamarFuncion = "SELECT obtener_apellidos_cliente(?) AS apellidos";
+		
+		try (PreparedStatement pstmt = connection.prepareStatement(sqlLlamarFuncion)) {
+			
+			// Establecer el parámetro DNI
+			pstmt.setString(1, dni.trim());
+			
+			// Ejecutar la consulta
+			try (ResultSet rs = pstmt.executeQuery()) {
+				
+				if (rs.next()) {
+					String apellidos = rs.getString("apellidos");
+					
+					if (apellidos != null) {
+						System.out.println("✅ Apellidos encontrados: " + apellidos);
+						return apellidos;
+					} else {
+						System.out.println("❌ Cliente no encontrado para DNI: " + dni);
+						return null;
+					}
+				} else {
+					System.out.println("❌ Error: La función no devolvió ningún resultado");
+					return null;
+				}
+			}
+		} catch (SQLException e) {
+			System.err.println("❌ Error al llamar la función almacenada: " + e.getMessage());
+			throw e;
+		}
+	}
+
+	/**
+	 * ACTIVIDAD 4.7 - Método 3: Demostrar múltiples llamadas a la función.
+	 * 
+	 * Demuestra el uso de la función almacenada con varios DNIs diferentes,
+	 * incluyendo casos de éxito y casos donde el cliente no existe.
+	 * 
+	 * @param dnis Array de DNIs para probar
+	 * @throws SQLException Si ocurre un error en las consultas
+	 */
+	public void demostrarFuncionAlmacenada(String[] dnis) throws SQLException {
+		System.out.println("=== ACTIVIDAD 4.7 - Demostración de Función Almacenada ===");
+		
+		if (dnis == null || dnis.length == 0) {
+			System.out.println("⚠️ No se proporcionaron DNIs para probar");
+			return;
+		}
+		
+		System.out.println("🧪 Probando función 'obtener_apellidos_cliente' con " + dnis.length + " DNI(s):");
+		System.out.println();
+		
+		int encontrados = 0;
+		int noEncontrados = 0;
+		
+		// Probar la función con cada DNI
+		for (int i = 0; i < dnis.length; i++) {
+			String dni = dnis[i];
+			
+			System.out.println("📋 Prueba " + (i + 1) + "/" + dnis.length + ":");
+			System.out.println("   DNI: " + (dni != null ? dni : "null"));
+			
+			try {
+				String apellidos = llamarFuncionObtenerApellidos(dni);
+				
+				if (apellidos != null) {
+					System.out.println("   ✅ Resultado: " + apellidos);
+					encontrados++;
+				} else {
+					System.out.println("   ❌ Resultado: Cliente no encontrado");
+					noEncontrados++;
+				}
+				
+			} catch (Exception e) {
+				System.out.println("   ❌ Error: " + e.getMessage());
+				noEncontrados++;
+			}
+			
+			System.out.println();
+		}
+		
+		// Mostrar estadísticas
+		System.out.println("📊 ESTADÍSTICAS DE PRUEBAS:");
+		System.out.println("   🎯 Total de pruebas: " + dnis.length);
+		System.out.println("   ✅ Clientes encontrados: " + encontrados);
+		System.out.println("   ❌ Clientes no encontrados: " + noEncontrados);
+		
+		if (dnis.length > 0) {
+			double porcentajeExito = (encontrados * 100.0) / dnis.length;
+			System.out.println("   📈 Porcentaje de éxito: " + String.format("%.1f%%", porcentajeExito));
+		}
+		
+		System.out.println();
+		System.out.println("💡 VENTAJAS DE LAS FUNCIONES ALMACENADAS:");
+		System.out.println("   🚀 Rendimiento: Lógica ejecutada en el servidor de BD");
+		System.out.println("   🔒 Seguridad: Lógica encapsulada y controlada");
+		System.out.println("   🎯 Reutilización: Una función, múltiples aplicaciones");
+		System.out.println("   📊 Mantenibilidad: Cambios centralizados en la BD");
+		System.out.println("   🔄 Consistencia: Misma lógica para todos los clientes");
+		
+		System.out.println("=======================================================");
+	}
+
+	/**
+	 * Método auxiliar para mostrar información sobre la función almacenada creada.
+	 * 
+	 * @param nombreFuncion Nombre de la función a consultar
+	 * @throws SQLException Si ocurre un error en la consulta
+	 */
+	private void mostrarInformacionFuncion(String nombreFuncion) throws SQLException {
+		System.out.println("\n📋 Información de la función almacenada:");
+		
+		// Consultar información de la función desde INFORMATION_SCHEMA
+		String sqlInfoFuncion = """
+			SELECT 
+				ROUTINE_NAME as 'Nombre',
+				ROUTINE_TYPE as 'Tipo',
+				DTD_IDENTIFIER as 'Tipo_Retorno',
+				ROUTINE_BODY as 'Lenguaje',
+				IS_DETERMINISTIC as 'Deterministica',
+				SQL_DATA_ACCESS as 'Acceso_Datos'
+			FROM INFORMATION_SCHEMA.ROUTINES 
+			WHERE ROUTINE_SCHEMA = DATABASE() 
+			AND ROUTINE_NAME = ?
+		""";
+		
+		try (PreparedStatement pstmt = connection.prepareStatement(sqlInfoFuncion)) {
+			pstmt.setString(1, nombreFuncion);
+			
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					System.out.println("   🏷️  Nombre: " + rs.getString("Nombre"));
+					System.out.println("   📝 Tipo: " + rs.getString("Tipo"));
+					System.out.println("   🔄 Tipo de retorno: " + rs.getString("Tipo_Retorno"));
+					System.out.println("   💻 Lenguaje: " + rs.getString("Lenguaje"));
+					System.out.println("   🎯 Determinística: " + rs.getString("Deterministica"));
+					System.out.println("   📊 Acceso a datos: " + rs.getString("Acceso_Datos"));
+				} else {
+					System.out.println("   ⚠️  No se encontró información de la función");
+				}
+			}
+		}
+	}
+
+	/**
+	 * Método auxiliar que compara el rendimiento entre función almacenada y consulta directa.
+	 * Demuestra cuándo es ventajoso usar funciones almacenadas.
+	 * 
+	 * @param dni DNI para la comparación
+	 * @throws SQLException Si ocurre un error en las consultas
+	 */
+	public void compararRendimientoFuncionVsConsulta(String dni) throws SQLException {
+		System.out.println("=== COMPARACIÓN: FUNCIÓN ALMACENADA vs CONSULTA DIRECTA ===");
+		System.out.println("🧪 Probando con DNI: " + dni);
+		System.out.println();
+		
+		// Método 1: Usando función almacenada
+		long inicioFuncion = System.currentTimeMillis();
+		String resultadoFuncion = null;
+		
+		try {
+			resultadoFuncion = llamarFuncionObtenerApellidos(dni);
+		} catch (Exception e) {
+			System.out.println("❌ Error en función almacenada: " + e.getMessage());
+		}
+		
+		long tiempoFuncion = System.currentTimeMillis() - inicioFuncion;
+		
+		// Método 2: Usando consulta directa
+		long inicioConsulta = System.currentTimeMillis();
+		String resultadoConsulta = null;
+		
+		String sqlConsultaDirecta = "SELECT APELLIDOS FROM CLIENTES WHERE DNI = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(sqlConsultaDirecta)) {
+			pstmt.setString(1, dni);
+			
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					resultadoConsulta = rs.getString("APELLIDOS");
+				}
+			}
+		}
+		
+		long tiempoConsulta = System.currentTimeMillis() - inicioConsulta;
+		
+		// Mostrar resultados de la comparación
+		System.out.println("📊 RESULTADOS DE LA COMPARACIÓN:");
+		System.out.println();
+		System.out.println("🔧 Función Almacenada:");
+		System.out.println("   ⏱️  Tiempo: " + tiempoFuncion + " ms");
+		System.out.println("   📋 Resultado: " + (resultadoFuncion != null ? resultadoFuncion : "No encontrado"));
+		System.out.println();
+		System.out.println("📊 Consulta Directa:");
+		System.out.println("   ⏱️  Tiempo: " + tiempoConsulta + " ms");
+		System.out.println("   📋 Resultado: " + (resultadoConsulta != null ? resultadoConsulta : "No encontrado"));
+		System.out.println();
+		
+		// Verificar consistencia
+		boolean resultadosIguales = (resultadoFuncion == null && resultadoConsulta == null) ||
+									(resultadoFuncion != null && resultadoFuncion.equals(resultadoConsulta));
+		
+		System.out.println("✅ Consistencia de resultados: " + (resultadosIguales ? "CORRECTA" : "ERROR"));
+		
+		if (tiempoFuncion < tiempoConsulta) {
+			System.out.println("🏆 La función almacenada fue más rápida");
+		} else if (tiempoConsulta < tiempoFuncion) {
+			System.out.println("🏆 La consulta directa fue más rápida");
+		} else {
+			System.out.println("🤝 Ambos métodos tuvieron el mismo rendimiento");
+		}
+		
+		System.out.println("==================================================");
+	}
+
+	/**
+	 * Método adicional que demuestra técnicas avanzadas con funciones almacenadas.
+	 * Incluye manejo de errores, optimización y buenas prácticas.
+	 */
+	public void demostrarTecnicasAvanzadasFunciones() throws SQLException {
+		System.out.println("=== TÉCNICAS AVANZADAS CON FUNCIONES ALMACENADAS ===");
+		
+		// 1. Crear una función más compleja que valide el formato del DNI
+		crearFuncionValidarDNI();
+		
+		// 2. Crear una función que combine múltiples campos
+		crearFuncionInformacionCompleta();
+		
+		// 3. Demostrar uso de múltiples funciones en una consulta
+		demostrarConsultaCombinada();
+		
+		System.out.println("==============================================================");
+	}
+
+	/**
+	 * Crea una función almacenada que valida si un DNI tiene formato correcto.
+	 */
+	private void crearFuncionValidarDNI() throws SQLException {
+		System.out.println("🔧 Creando función de validación de DNI...");
+		
+		String sqlEliminar = "DROP FUNCTION IF EXISTS validar_dni_formato";
+		String sqlCrear = """
+			CREATE FUNCTION validar_dni_formato(dni_param VARCHAR(20))
+			RETURNS BOOLEAN
+			READS SQL DATA
+			DETERMINISTIC
+			BEGIN
+				-- Verificar que el DNI no sea NULL y tenga longitud correcta
+				IF dni_param IS NULL OR LENGTH(dni_param) != 9 THEN
+					RETURN FALSE;
+				END IF;
+				
+				-- Verificar que los primeros 8 caracteres sean números
+				IF SUBSTRING(dni_param, 1, 8) NOT REGEXP '^[0-9]{8}$' THEN
+					RETURN FALSE;
+				END IF;
+				
+				-- Verificar que el último carácter sea una letra
+				IF SUBSTRING(dni_param, 9, 1) NOT REGEXP '^[A-Za-z]$' THEN
+					RETURN FALSE;
+				END IF;
+				
+				RETURN TRUE;
+			END
+		""";
+		
+		try (java.sql.Statement stmt = connection.createStatement()) {
+			stmt.execute(sqlEliminar);
+			stmt.execute(sqlCrear);
+			System.out.println("✅ Función 'validar_dni_formato' creada");
+		}
+	}
+
+	/**
+	 * Crea una función que devuelve información completa del cliente.
+	 */
+	private void crearFuncionInformacionCompleta() throws SQLException {
+		System.out.println("🔧 Creando función de información completa...");
+		
+		String sqlEliminar = "DROP FUNCTION IF EXISTS obtener_info_cliente";
+		String sqlCrear = """
+			CREATE FUNCTION obtener_info_cliente(dni_param VARCHAR(20))
+			RETURNS VARCHAR(500)
+			READS SQL DATA
+			DETERMINISTIC
+			BEGIN
+				DECLARE info_resultado VARCHAR(500);
+				DECLARE apellidos_temp VARCHAR(255);
+				DECLARE cp_temp INT;
+				
+				-- Obtener datos del cliente
+				SELECT APELLIDOS, CP INTO apellidos_temp, cp_temp
+				FROM CLIENTES 
+				WHERE DNI = dni_param;
+				
+				-- Si no se encontró el cliente
+				IF apellidos_temp IS NULL THEN
+					RETURN CONCAT('Cliente con DNI ', dni_param, ' no encontrado');
+				END IF;
+				
+				-- Construir información completa
+				SET info_resultado = CONCAT(
+					'DNI: ', dni_param,
+					', Apellidos: ', apellidos_temp,
+					', CP: ', IFNULL(cp_temp, 'No especificado')
+				);
+				
+				RETURN info_resultado;
+			END
+		""";
+		
+		try (java.sql.Statement stmt = connection.createStatement()) {
+			stmt.execute(sqlEliminar);
+			stmt.execute(sqlCrear);
+			System.out.println("✅ Función 'obtener_info_cliente' creada");
+		}
+	}
+
+	/**
+	 * Demuestra el uso combinado de múltiples funciones en una sola consulta.
+	 */
+	private void demostrarConsultaCombinada() throws SQLException {
+		System.out.println("\n🧪 Demostrando consulta con múltiples funciones:");
+		
+		String sqlCombinada = """
+			SELECT 
+				DNI,
+				validar_dni_formato(DNI) as DNI_VALIDO,
+				obtener_apellidos_cliente(DNI) as APELLIDOS,
+				obtener_info_cliente(DNI) as INFO_COMPLETA
+			FROM CLIENTES
+			LIMIT 3
+		""";
+		
+		try (java.sql.Statement stmt = connection.createStatement();
+			 ResultSet rs = stmt.executeQuery(sqlCombinada)) {
+			
+			System.out.println("\n📊 Resultados de consulta combinada:");
+			System.out.println("DNI\t\tVÁLIDO\tAPELLIDOS\tINFO COMPLETA");
+			System.out.println("─".repeat(80));
+			
+			while (rs.next()) {
+				System.out.printf("%-12s %-8s %-15s %s%n",
+					rs.getString("DNI"),
+					rs.getBoolean("DNI_VALIDO") ? "SÍ" : "NO",
+					rs.getString("APELLIDOS"),
+					rs.getString("INFO_COMPLETA")
+				);
+			}
+		}
 	}
 
 	// Small helper for desired/existing data

@@ -25,7 +25,7 @@ public class ImprimirResultados {
         // getTables() busca las tablas. Con 'null' en los primeros 3 parámetros,
         // le indicamos que busque en cualquier catálogo y esquema.
         try (ResultSet rs = metaData.getTables(catalogo, null, null, types)) {
-            System.out.println("📋 Tablas encontradas en la base de datos:");
+            System.out.println("Tablas encontradas en la base de datos:");
 
             // 4. Iterar sobre los resultados.
             while (rs.next()) {
@@ -62,7 +62,7 @@ public class ImprimirResultados {
         // La validación anterior nos da una capa de seguridad.
         String sql = "SELECT * FROM " + nombreTabla;
 
-        System.out.println("📄 Registros de la tabla: " + nombreTabla);
+        System.out.println("Registros de la tabla: " + nombreTabla);
         System.out.println("----------------------------------------");
 
         // 3. Usar try-with-resources para garantizar el cierre automático de PreparedStatement y ResultSet.

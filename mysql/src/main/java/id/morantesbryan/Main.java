@@ -133,7 +133,7 @@ public class Main {
 //
 //            // Si el método termina sin lanzar una excepción, confirmamos la transacción.
 //            connection.commit();
-//            System.out.println("\nTransacción confirmada (COMMIT) con éxito. ✅");
+//            System.out.println("\nTransacción confirmada (COMMIT) con éxito.");
 //
 //            print.imprimirRegistros(connection, CATALOGO, NOMBRE_TABLA);
 
@@ -154,7 +154,7 @@ public class Main {
                 // == FIN DE LA TRANSACCIÓN (ÉXITO) ==
                 connection.commit();
 
-                System.out.println("Transacción confirmada (COMMIT) con éxito. ✅");
+                System.out.println("Transacción confirmada (COMMIT) con éxito.");
                 System.out.println("Resultados del lote: " + Arrays.toString(resultados));
                 // Un resultado de 1 (o Statement.SUCCESS_NO_INFO) por cada inserción indica éxito.
                 Arrays.stream(resultados).sequential().forEach(r -> System.out.println("Resultado: " + r));
@@ -185,7 +185,7 @@ public class Main {
             // Descomenta las siguientes líneas para ejecutar la actividad 4.4
             
             System.out.println("\n" + "=".repeat(60));
-            System.out.println("🧮 ACTIVIDAD 4.4: CONTAR FILAS SIN RECORRER RESULTSET");
+            System.out.println("ACTIVIDAD 4.4: CONTAR FILAS SIN RECORRER RESULTSET");
             System.out.println("=".repeat(60));
             
             // Método 1: ResultSet Scrollable con last() y getRow()
@@ -201,12 +201,12 @@ public class Main {
             dao.explicarTecnicasConteoFilas();
 
             System.out.println("\n" + "=".repeat(60));
-            System.out.println("✅ ACTIVIDAD 4.4 COMPLETADA EXITOSAMENTE");
+            System.out.println("ACTIVIDAD 4.4 COMPLETADA EXITOSAMENTE");
             System.out.println("=".repeat(60));
 
             // ====== ACTIVIDAD 4.5: Consultar clientes con PreparedStatement ======
             System.out.println("\n" + "=".repeat(60));
-            System.out.println("🔍 ACTIVIDAD 4.5: CONSULTA INDIVIDUAL CON PREPARED STATEMENT");
+            System.out.println("ACTIVIDAD 4.5: CONSULTA INDIVIDUAL CON PREPARED STATEMENT");
             System.out.println("=".repeat(60));
 
             // Ejemplo 1: Consultar clientes específicos por DNI
@@ -217,22 +217,22 @@ public class Main {
                 "56789012B"     // Cliente existente
             };
             
-            System.out.println("🎯 Ejemplo 1: Consultando clientes específicos");
+            System.out.println("Ejemplo 1: Consultando clientes específicos");
             dao.consultarClientesPorDNI(dnisEspecificos);
 
             // Ejemplo 2: Consultar todos los clientes individualmente
-            System.out.println("🎯 Ejemplo 2: Consultando TODOS los clientes individualmente");
+            System.out.println("Ejemplo 2: Consultando TODOS los clientes individualmente");
             dao.consultarTodosLosClientesIndividualmente();
 
             // Ejemplo 3: Demostración de buenas prácticas
-            System.out.println("🎯 Ejemplo 3: Demostración de buenas prácticas");
+            System.out.println("Ejemplo 3: Demostración de buenas prácticas");
             dao.demostrarVentajasPreparedStatement();
 
-            System.out.println("✅ ACTIVIDAD 4.5 COMPLETADA EXITOSAMENTE");
+            System.out.println("ACTIVIDAD 4.5 COMPLETADA EXITOSAMENTE");
 
             // ====== ACTIVIDAD 4.6: Tabla COMPANIES y operaciones batch ======
             System.out.println("\n" + "=".repeat(60));
-            System.out.println("🏢 ACTIVIDAD 4.6: GESTIÓN DE COMPAÑÍAS CON BATCH");
+            System.out.println("ACTIVIDAD 4.6: GESTIÓN DE COMPAÑÍAS CON BATCH");
             System.out.println("=".repeat(60));
 
             // Paso 1: Crear la tabla COMPANIES
@@ -254,21 +254,79 @@ public class Main {
                 null // Compañía null
             );
 
-            System.out.println("🎯 Insertando compañías de ejemplo (incluye casos de error para demostración)");
+            System.out.println("Insertando compañías de ejemplo (incluye casos de error para demostración)");
             
             // Paso 3: Insertar compañías usando batch con transacción controlada
             int companiesInsertadas = dao.insertarCompaniesEnBatch(companiesEjemplo);
             
-            System.out.println("✅ Proceso completado. Compañías insertadas: " + companiesInsertadas);
+            System.out.println("Proceso completado. Compañías insertadas: " + companiesInsertadas);
 
             // Paso 4: Mostrar las compañías insertadas
             dao.mostrarCompaniesInsertadas();
 
             // Paso 5: Demostración de escenarios avanzados
-            System.out.println("🎯 Demostrando escenarios avanzados de batch insert:");
+            System.out.println("Demostrando escenarios avanzados de batch insert:");
             dao.demostrarEscenariosCompanies();
 
-            System.out.println("✅ ACTIVIDAD 4.6 COMPLETADA EXITOSAMENTE");
+            System.out.println("ACTIVIDAD 4.6 COMPLETADA EXITOSAMENTE");
+
+            // ====== ACTIVIDAD 4.7: Función almacenada en MySQL ======
+            System.out.println("\n" + "=".repeat(60));
+            System.out.println("ACTIVIDAD 4.7: FUNCIÓN ALMACENADA MYSQL");
+            System.out.println("=".repeat(60));
+
+            // Paso 1: Crear la función almacenada en MySQL
+            System.out.println("Paso 1: Creando función almacenada 'obtener_apellidos_cliente'");
+            dao.crearFuncionAlmacenadaObtenerApellidos();
+
+            // Paso 2: Probar la función con DNIs conocidos
+            String[] dnisParaProbar = {
+                "78901234X",    // Cliente existente (NADALES)
+                "89012345E",    // Cliente existente (ROJAS)
+                "56789012B",    // Cliente existente (SAMPER)
+                "99999999Z",    // Cliente inexistente
+                "INVALID00",    // DNI inválido
+                null            // DNI null (para probar validación)
+            };
+
+            System.out.println("Paso 2: Probando función almacenada con múltiples DNIs");
+            dao.demostrarFuncionAlmacenada(dnisParaProbar);
+
+            // Paso 3: Comparar rendimiento función vs consulta directa
+            System.out.println("Paso 3: Comparando rendimiento");
+            dao.compararRendimientoFuncionVsConsulta("78901234X");
+
+            // Paso 4: Ejemplos individuales de uso
+            System.out.println("Paso 4: Ejemplos de uso individual");
+            System.out.println("════════════════════════════════════");
+            
+            String[] ejemplosIndividuales = {"78901234X", "89012345E", "99999999Z"};
+            for (String dniEjemplo : ejemplosIndividuales) {
+                try {
+                    System.out.println("\nConsultando DNI: " + dniEjemplo);
+                    String apellidos = dao.llamarFuncionObtenerApellidos(dniEjemplo);
+                    
+                    if (apellidos != null) {
+                        System.out.println("   Apellidos obtenidos: " + apellidos);
+                    } else {
+                        System.out.println("   Cliente no encontrado");
+                    }
+                } catch (Exception e) {
+                    System.out.println("   Error: " + e.getMessage());
+                }
+            }
+
+            // Paso 5: Demostrar técnicas avanzadas (opcional)
+            System.out.println("\nPaso 5: Técnicas avanzadas con funciones almacenadas");
+            dao.demostrarTecnicasAvanzadasFunciones();
+
+            System.out.println("\nACTIVIDAD 4.7 COMPLETADA EXITOSAMENTE");
+            System.out.println("\nRESUMEN TÉCNICO:");
+            System.out.println("   Función MySQL creada: obtener_apellidos_cliente(dni VARCHAR(20))");
+            System.out.println("   Retorna: VARCHAR(255) con los apellidos del cliente");
+            System.out.println("   Llamada desde Java: SELECT obtener_apellidos_cliente(?)");
+            System.out.println("   Manejo completo de casos de error y validación");
+            System.out.println("   Funciones adicionales: validar_dni_formato, obtener_info_cliente");
 
             // Cerramos la conexion
             connection.close();
