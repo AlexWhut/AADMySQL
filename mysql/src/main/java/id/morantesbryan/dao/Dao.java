@@ -1490,6 +1490,125 @@ public class Dao {
 		}
 	}
 
+	/**
+	 * ACTIVIDAD 4.8: Navegador interactivo de tabla
+	 * Permite navegar por los contenidos de una tabla usando comandos:
+	 * - "k": siguiente fila
+	 * - "d": fila anterior
+	 * - numero: ir a fila específica
+	 * - ".": salir
+	 */
+	public void navegadorInteractivoTabla(String nombreTabla) throws SQLException, java.io.IOException {
+		System.out.println("============================================================");
+		System.out.println("ACTIVIDAD 4.8: NAVEGADOR INTERACTIVO DE TABLA");
+		System.out.println("============================================================");
+		System.out.println("Tabla: " + nombreTabla);
+		System.out.println();
+		System.out.println("COMANDOS DISPONIBLES:");
+		System.out.println("  k - Ir a la siguiente fila");
+		System.out.println("  d - Ir a la fila anterior");
+		System.out.println("  [numero] - Ir a una fila específica");
+		System.out.println("  . - Salir del navegador");
+		System.out.println("============================================================");
+		System.out.println();
+
+		// Crear consulta con ResultSet scrollable
+		String sql = "SELECT * FROM " + nombreTabla;
+		
+		try (java.sql.Statement stmt = connection.createStatement(
+				ResultSet.TYPE_SCROLL_INSENSITIVE,
+				ResultSet.CONCUR_READ_ONLY);
+			 ResultSet rs = stmt.executeQuery(sql)) {
+
+			// Verificar que hay datos
+			if (!rs.next()) {
+				System.out.println("La tabla está vacía.");
+				return;
+			}
+
+			// Obtener metadata para mostrar nombres de columnas
+			java.sql.ResultSetMetaData metaData = rs.getMetaData();
+			int numColumnas = metaData.getColumnCount();
+
+			// Mostrar primera fila
+			mostrarFilaActual(rs, metaData, numColumnas);
+
+			// Leer comandos del usuario
+			java.io.BufferedReader br = new java.io.BufferedReader(
+				new java.io.InputStreamReader(System.in)
+			);
+
+			while (true) {
+				System.out.print("\nComando: ");
+				String comando = br.readLine().trim();
+
+				if (comando.equals(".")) {
+					System.out.println("Saliendo del navegador...");
+					break;
+				} 
+				else if (comando.equalsIgnoreCase("k")) {
+					// Ir a siguiente fila
+					if (rs.next()) {
+						mostrarFilaActual(rs, metaData, numColumnas);
+					} else {
+						System.out.println("ERROR: Ya estás en la última fila");
+						rs.last(); // Volver a la última fila válida
+					}
+				} 
+				else if (comando.equalsIgnoreCase("d")) {
+					// Ir a fila anterior
+					if (rs.previous()) {
+						mostrarFilaActual(rs, metaData, numColumnas);
+					} else {
+						System.out.println("ERROR: Ya estás en la primera fila");
+						rs.first(); // Volver a la primera fila válida
+					}
+				} 
+				else {
+					// Intentar interpretar como número de fila
+					try {
+						int numeroFila = Integer.parseInt(comando);
+						if (numeroFila < 1) {
+							System.out.println("ERROR: El número de fila debe ser mayor que 0");
+							continue;
+						}
+						
+						if (rs.absolute(numeroFila)) {
+							mostrarFilaActual(rs, metaData, numColumnas);
+						} else {
+							System.out.println("ERROR: La fila " + numeroFila + " no existe");
+							// Volver a la posición válida
+							if (rs.isAfterLast()) {
+								rs.last();
+							} else if (rs.isBeforeFirst()) {
+								rs.first();
+							}
+						}
+					} catch (NumberFormatException e) {
+						System.out.println("ERROR: Comando no reconocido. Usa 'k', 'd', un número, o '.'");
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Método auxiliar para mostrar la fila actual del ResultSet
+	 */
+	private void mostrarFilaActual(ResultSet rs, java.sql.ResultSetMetaData metaData, int numColumnas) 
+			throws SQLException {
+		int numeroFila = rs.getRow();
+		System.out.println("\n--- Fila " + numeroFila + " ---");
+		
+		for (int i = 1; i <= numColumnas; i++) {
+			String nombreColumna = metaData.getColumnName(i);
+			Object valor = rs.getObject(i);
+			String valorStr = (valor != null) ? valor.toString() : "NULL";
+			
+			System.out.println(nombreColumna + ": " + valorStr);
+		}
+	}
+
 	// Small helper for desired/existing data
 	private static class ClienteData {
 		final String apellidos;

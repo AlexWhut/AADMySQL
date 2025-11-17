@@ -328,6 +328,17 @@ public class Main {
             System.out.println("   Manejo completo de casos de error y validación");
             System.out.println("   Funciones adicionales: validar_dni_formato, obtener_info_cliente");
 
+            // ====== ACTIVIDAD 4.8: Navegador interactivo de tabla ======
+            System.out.println("\n" + "=".repeat(60));
+            System.out.println("ACTIVIDAD 4.8: NAVEGADOR INTERACTIVO DE TABLA");
+            System.out.println("=".repeat(60));
+            
+            // Navegación interactiva de la tabla CLIENTES
+            // Descomenta la siguiente línea para ejecutar el navegador
+            dao.navegadorInteractivoTabla("CLIENTES");
+
+            System.out.println("\nACTIVIDAD 4.8 COMPLETADA EXITOSAMENTE");
+
             // Cerramos la conexion
             connection.close();
         } catch (Exception e) {
