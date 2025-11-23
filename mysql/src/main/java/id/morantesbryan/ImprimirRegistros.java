@@ -68,7 +68,7 @@ public class ImprimirRegistros {
         }
     }
 
-    // Método main de prueba (modifica la URL/credenciales)
+    // Método main de prueba
     public static void main(String[] args) throws Exception {
         String url = "jdbc:mysql://localhost:3306/hr_database";
         String user = "root";
