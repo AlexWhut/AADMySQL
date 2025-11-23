@@ -1140,19 +1140,19 @@ public class Dao {
 					String apellidos = rs.getString("apellidos");
 					
 					if (apellidos != null) {
-						System.out.println("✅ Apellidos encontrados: " + apellidos);
+						System.out.println(" Apellidos encontrados: " + apellidos);
 						return apellidos;
 					} else {
-						System.out.println("❌ Cliente no encontrado para DNI: " + dni);
+						System.out.println(" Cliente no encontrado para DNI: " + dni);
 						return null;
 					}
 				} else {
-					System.out.println("❌ Error: La función no devolvió ningún resultado");
+					System.out.println(" Error: La función no devolvió ningún resultado");
 					return null;
 				}
 			}
 		} catch (SQLException e) {
-			System.err.println("❌ Error al llamar la función almacenada: " + e.getMessage());
+			System.err.println(" Error al llamar la función almacenada: " + e.getMessage());
 			throw e;
 		}
 	}
@@ -1168,11 +1168,11 @@ public class Dao {
 		System.out.println("=== ACTIVIDAD 4.7 - Demostración de Función Almacenada ===");
 		
 		if (dnis == null || dnis.length == 0) {
-			System.out.println("⚠️ No se proporcionaron DNIs para probar");
+			System.out.println(" No se proporcionaron DNIs para probar");
 			return;
 		}
 		
-		System.out.println("🧪 Probando función 'obtener_apellidos_cliente' con " + dnis.length + " DNI(s):");
+		System.out.println(" Probando función 'obtener_apellidos_cliente' con " + dnis.length + " DNI(s):");
 		System.out.println();
 		
 		int encontrados = 0;
@@ -1182,22 +1182,22 @@ public class Dao {
 		for (int i = 0; i < dnis.length; i++) {
 			String dni = dnis[i];
 			
-			System.out.println("📌 Prueba " + (i + 1) + "/" + dnis.length + ":");
+			System.out.println(" Prueba " + (i + 1) + "/" + dnis.length + ":");
 			System.out.println("   DNI: " + (dni != null ? dni : "null"));
 			
 			try {
 				String apellidos = llamarFuncionObtenerApellidos(dni);
 				
 				if (apellidos != null) {
-					System.out.println("   ✅ Resultado: " + apellidos);
+					System.out.println("    Resultado: " + apellidos);
 					encontrados++;
 				} else {
-					System.out.println("   ❌ Resultado: Cliente no encontrado");
+					System.out.println("    Resultado: Cliente no encontrado");
 					noEncontrados++;
 				}
 				
 			} catch (Exception e) {
-				System.out.println("   ❌ Error: " + e.getMessage());
+				System.out.println("    Error: " + e.getMessage());
 				noEncontrados++;
 			}
 			
@@ -1205,23 +1205,23 @@ public class Dao {
 		}
 		
 		// Mostrar estadísticas
-		System.out.println("📊 ESTADÍSTICAS DE PRUEBAS:");
-		System.out.println("   🎯 Total de pruebas: " + dnis.length);
-		System.out.println("   ✅ Clientes encontrados: " + encontrados);
-		System.out.println("   ❌ Clientes no encontrados: " + noEncontrados);
+		System.out.println(" ESTADÍSTICAS DE PRUEBAS:");
+		System.out.println("    Total de pruebas: " + dnis.length);
+		System.out.println("    Clientes encontrados: " + encontrados);
+		System.out.println("    Clientes no encontrados: " + noEncontrados);
 		
 		if (dnis.length > 0) {
 			double porcentajeExito = (encontrados * 100.0) / dnis.length;
-			System.out.println("   📈 Porcentaje de éxito: " + String.format("%.1f%%", porcentajeExito));
+			System.out.println("    Porcentaje de éxito: " + String.format("%.1f%%", porcentajeExito));
 		}
 		
 		System.out.println();
-		System.out.println("💡 VENTAJAS DE LAS FUNCIONES ALMACENADAS:");
-		System.out.println("   🚀 Rendimiento: Lógica ejecutada en el servidor de BD");
-		System.out.println("   🔒 Seguridad: Lógica encapsulada y controlada");
-		System.out.println("   🎯 Reutilización: Una función, múltiples aplicaciones");
-		System.out.println("   📊 Mantenibilidad: Cambios centralizados en la BD");
-		System.out.println("   🔄 Consistencia: Misma lógica para todos los clientes");
+		System.out.println(" VENTAJAS DE LAS FUNCIONES ALMACENADAS:");
+		System.out.println("    Rendimiento: Lógica ejecutada en el servidor de BD");
+		System.out.println("    Seguridad: Lógica encapsulada y controlada");
+		System.out.println("    Reutilización: Una función, múltiples aplicaciones");
+		System.out.println("    Mantenibilidad: Cambios centralizados en la BD");
+		System.out.println("    Consistencia: Misma lógica para todos los clientes");
 		
 		System.out.println("=======================================================");
 	}
@@ -1232,7 +1232,7 @@ public class Dao {
 	 * @throws SQLException Si ocurre un error en la consulta
 	 */
 	private void mostrarInformacionFuncion(String nombreFuncion) throws SQLException {
-		System.out.println("\n📌 Información de la función almacenada:");
+		System.out.println("\n Información de la función almacenada:");
 		
 		// Consultar información de la función desde INFORMATION_SCHEMA
 		String sqlInfoFuncion = """
@@ -1253,14 +1253,14 @@ public class Dao {
 			
 			try (ResultSet rs = pstmt.executeQuery()) {
 				if (rs.next()) {
-					System.out.println("   🕊️   Nombre: " + rs.getString("Nombre"));
-					System.out.println("   📄 Tipo: " + rs.getString("Tipo"));
-					System.out.println("   🔄 Tipo de retorno: " + rs.getString("Tipo_Retorno"));
-					System.out.println("   💻 Lenguaje: " + rs.getString("Lenguaje"));
-					System.out.println("   🎯 Determinística: " + rs.getString("Deterministica"));
-					System.out.println("   📊 Acceso a datos: " + rs.getString("Acceso_Datos"));
+					System.out.println("    Nombre: " + rs.getString("Nombre"));
+					System.out.println("    Tipo: " + rs.getString("Tipo"));
+					System.out.println("    Tipo de retorno: " + rs.getString("Tipo_Retorno"));
+					System.out.println("    Lenguaje: " + rs.getString("Lenguaje"));
+					System.out.println("    Determinística: " + rs.getString("Deterministica"));
+					System.out.println("    Acceso a datos: " + rs.getString("Acceso_Datos"));
 				} else {
-					System.out.println("   ⚠️   No se encontró información de la función");
+					System.out.println("     No se encontró información de la función");
 				}
 			}
 		}
@@ -1274,7 +1274,7 @@ public class Dao {
 	 */
 	public void compararRendimientoFuncionVsConsulta(String dni) throws SQLException {
 		System.out.println("=== COMPARACIÓN: FUNCIÓN ALMACENADA vs CONSULTA DIRECTA ===");
-		System.out.println("🧪 Probando con DNI: " + dni);
+		System.out.println(" Probando con DNI: " + dni);
 		System.out.println();
 		
 		// Método 1: Usando función almacenada
@@ -1284,7 +1284,7 @@ public class Dao {
 		try {
 			resultadoFuncion = llamarFuncionObtenerApellidos(dni);
 		} catch (Exception e) {
-			System.out.println("❌ Error en función almacenada: " + e.getMessage());
+			System.out.println(" Error en función almacenada: " + e.getMessage());
 		}
 		
 		long tiempoFuncion = System.currentTimeMillis() - inicioFuncion;
@@ -1307,29 +1307,29 @@ public class Dao {
 		long tiempoConsulta = System.currentTimeMillis() - inicioConsulta;
 		
 		// Mostrar resultados de la comparación
-		System.out.println("📊 RESULTADOS DE LA COMPARACIÓN:");
+		System.out.println(" RESULTADOS DE LA COMPARACIÓN:");
 		System.out.println();
-		System.out.println("🔧 Función Almacenada:");
-		System.out.println("   ⏱️   Tiempo: " + tiempoFuncion + " ms");
-		System.out.println("   📌 Resultado: " + (resultadoFuncion != null ? resultadoFuncion : "No encontrado"));
+		System.out.println(" Función Almacenada:");
+		System.out.println("    Tiempo: " + tiempoFuncion + " ms");
+		System.out.println("    Resultado: " + (resultadoFuncion != null ? resultadoFuncion : "No encontrado"));
 		System.out.println();
-		System.out.println("📊 Consulta Directa:");
-		System.out.println("   ⏱️   Tiempo: " + tiempoConsulta + " ms");
-		System.out.println("   📌 Resultado: " + (resultadoConsulta != null ? resultadoConsulta : "No encontrado"));
+		System.out.println(" Consulta Directa:");
+		System.out.println("    Tiempo: " + tiempoConsulta + " ms");
+		System.out.println("    Resultado: " + (resultadoConsulta != null ? resultadoConsulta : "No encontrado"));
 		System.out.println();
 		
 		// Verificar consistencia
 		boolean resultadosIguales = (resultadoFuncion == null && resultadoConsulta == null) ||
 									(resultadoFuncion != null && resultadoFuncion.equals(resultadoConsulta));
 		
-		System.out.println("✅ Consistencia de resultados: " + (resultadosIguales ? "CORRECTA" : "ERROR"));
+		System.out.println(" Consistencia de resultados: " + (resultadosIguales ? "CORRECTA" : "ERROR"));
 		
 		if (tiempoFuncion < tiempoConsulta) {
-			System.out.println("🏆 La función almacenada fue más rápida");
+			System.out.println(" La función almacenada fue más rápida");
 		} else if (tiempoConsulta < tiempoFuncion) {
-			System.out.println("🏆 La consulta directa fue más rápida");
+			System.out.println(" La consulta directa fue más rápida");
 		} else {
-			System.out.println("🤔 Ambos métodos tuvieron el mismo rendimiento");
+			System.out.println(" Ambos métodos tuvieron el mismo rendimiento");
 		}
 		
 		System.out.println("==================================================");
@@ -1358,7 +1358,7 @@ public class Dao {
 	 * Crea una función almacenada que valida si un DNI tiene formato correcto.
 	 */
 	private void crearFuncionValidarDNI() throws SQLException {
-		System.out.println("🔧 Creando función de validación de DNI...");
+		System.out.println(" Creando función de validación de DNI...");
 		
 		String sqlEliminar = "DROP FUNCTION IF EXISTS validar_dni_formato";
 		String sqlCrear = """
@@ -1389,7 +1389,7 @@ public class Dao {
 		try (java.sql.Statement stmt = connection.createStatement()) {
 			stmt.execute(sqlEliminar);
 			stmt.execute(sqlCrear);
-			System.out.println("✅ Función 'validar_dni_formato' creada");
+			System.out.println(" Función 'validar_dni_formato' creada");
 		}
 	}
 
@@ -1397,7 +1397,7 @@ public class Dao {
 	 * Crea una función que devuelve información completa del cliente.
 	 */
 	private void crearFuncionInformacionCompleta() throws SQLException {
-		System.out.println("🔧 Creando función de información completa...");
+		System.out.println(" Creando función de información completa...");
 		
 		String sqlEliminar = "DROP FUNCTION IF EXISTS obtener_info_cliente";
 		String sqlCrear = """
@@ -1434,7 +1434,7 @@ public class Dao {
 		try (java.sql.Statement stmt = connection.createStatement()) {
 			stmt.execute(sqlEliminar);
 			stmt.execute(sqlCrear);
-			System.out.println("✅ Función 'obtener_info_cliente' creada");
+			System.out.println(" Función 'obtener_info_cliente' creada");
 		}
 	}
 
@@ -1442,7 +1442,7 @@ public class Dao {
 	 * Demuestra el uso combinado de múltiples funciones en una sola consulta.
 	 */
 	private void demostrarConsultaCombinada() throws SQLException {
-		System.out.println("\n🧪 Demostrando consulta con múltiples funciones:");
+		System.out.println("\n Demostrando consulta con múltiples funciones:");
 		
 		String sqlCombinada = """
 			SELECT 
@@ -1457,7 +1457,7 @@ public class Dao {
 		try (java.sql.Statement stmt = connection.createStatement();
 			 ResultSet rs = stmt.executeQuery(sqlCombinada)) {
 			
-			System.out.println("\n📊 Resultados de consulta combinada:");
+			System.out.println("\n Resultados de consulta combinada:");
 			System.out.println("DNI\t\tVÁLIDO\tAPELLIDOS\tINFO COMPLETA");
 			System.out.println("─".repeat(80));
 			
