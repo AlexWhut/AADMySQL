@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering
+ PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN"
+ "https://hibernate.org/dtd/hibernate-reverse-engineering-3.0.dtd">
+<hibernate-reverse-engineering>
+ <schema-selection match-catalog="proyecto_orm"/>
+ <table name="sede" class="Sede">
+ <primary-key>
+ <generator class="identity"/>
+ </primary-key>
+ </table>
+ <table name="departamento" class="Departamento">
+ <primary-key>
+ <generator class="identity"/>
+ </primary-key>
+ <foreign-key constraint-name="fk_depto_sede">
+ <many-to-one property="sede"/>
+ </foreign-key>
+ </table>
+ <table name="empleado" class="Empleado">
+ <column name="nom_emp" property="nombre"/> <foreign-key constraintname="fk_empleado_depto">
+ <many-to-one property="departamento"/>
+ </foreign-key>
+ </table>
+ <table name="empleado_datos_prof" class="DatosProfesionales">
+ <primary-key>
+ <generator class="foreign">
+ <param name="property">empleado</param>
+ </generator>
+ </primary-key>
+ <column name="sueldo_bruto_anual" property="sueldo"/>
+ <foreign-key constraint-name="fk_empleado_datosprof_empl">
+ <one-to-one property="empleado"/>
+ </foreign-key>
+ </table>
+ <table name="proyecto" class="Proyecto">
+ <primary-key>
+ <generator class="identity"/>
+ </primary-key>
+ <column name="nom_proy" property="nombre"/>
+ <column name="f_inicio" property="fechaInicio"/>
+ <column name="f_fin" property="fechaFin"/> </table>
+</hibernate-reverse-engineering>
