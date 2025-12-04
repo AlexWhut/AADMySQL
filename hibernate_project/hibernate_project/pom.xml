@@ -65,6 +65,7 @@
 				<version>3.5.7</version>
 			</plugin>
 
+			<!-- Temporarily disabled to avoid DB connection attempt during compile
 			<plugin>
 				<groupId>org.hibernate.tool</groupId>
 				<artifactId>hibernate-tools-maven</artifactId>
@@ -91,6 +92,7 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			-->
 		</plugins>
 	</build>
 

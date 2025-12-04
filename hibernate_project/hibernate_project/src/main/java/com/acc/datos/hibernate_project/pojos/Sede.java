@@ -7,7 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import static jakarta.persistence.GenerationType.IDENTITY;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -24,7 +24,7 @@ import java.util.Set;
 public class Sede  implements java.io.Serializable {
 
 
-     private Integer idSede;
+    private int idSede;
      private String nomSede;
      private Set<Departamento> departamentos = new HashSet<Departamento>(0);
      private Set<ProyectoSede> proyectoSedes = new HashSet<ProyectoSede>(0);
@@ -42,15 +42,14 @@ public class Sede  implements java.io.Serializable {
        this.proyectoSedes = proyectoSedes;
     }
    
-     @Id @GeneratedValue(strategy=IDENTITY)
-
-    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_sede", unique=true, nullable=false)
-    public Integer getIdSede() {
+    public int getIdSede() {
         return this.idSede;
     }
-    
-    public void setIdSede(Integer idSede) {
+
+    public void setIdSede(int idSede) {
         this.idSede = idSede;
     }
 

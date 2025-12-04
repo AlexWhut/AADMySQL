@@ -7,7 +7,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import static jakarta.persistence.GenerationType.IDENTITY;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -27,7 +27,7 @@ import java.util.Set;
 public class Proyecto  implements java.io.Serializable {
 
 
-     private Integer idProy;
+    private int idProy;
      private Date FInicio;
      private Date FFin;
      private String nomProy;
@@ -48,15 +48,15 @@ public class Proyecto  implements java.io.Serializable {
        this.proyectoSedes = proyectoSedes;
     }
    
-     @Id @GeneratedValue(strategy=IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    
     @Column(name="id_proy", unique=true, nullable=false)
-    public Integer getIdProy() {
+    public int getIdProy() {
         return this.idProy;
     }
     
-    public void setIdProy(Integer idProy) {
+    public void setIdProy(int idProy) {
         this.idProy = idProy;
     }
 

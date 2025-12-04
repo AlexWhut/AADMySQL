@@ -1,12 +1,11 @@
-// default package
+package com.acc.datos.hibernate_project.pojos;
 // Generated 24 nov 2025, 10:32:36 by Hibernate Tools 6.6.33.Final
-
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
-import static jakarta.persistence.GenerationType.IDENTITY;
+ 
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -25,7 +24,7 @@ import java.util.Set;
 public class Departamento  implements java.io.Serializable {
 
 
-     private Integer idDepto;
+    private int idDepto;
      private Sede sede;
      private String nomDepto;
      private Set<Empleado> empleados = new HashSet<Empleado>(0);
@@ -44,15 +43,15 @@ public class Departamento  implements java.io.Serializable {
        this.empleados = empleados;
     }
    
-     @Id @GeneratedValue(strategy=IDENTITY)
+    @Id
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
 
-    
     @Column(name="id_depto", unique=true, nullable=false)
-    public Integer getIdDepto() {
+    public int getIdDepto() {
         return this.idDepto;
     }
     
-    public void setIdDepto(Integer idDepto) {
+    public void setIdDepto(int idDepto) {
         this.idDepto = idDepto;
     }
 

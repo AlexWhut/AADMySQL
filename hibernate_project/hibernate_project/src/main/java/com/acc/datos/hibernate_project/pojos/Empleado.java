@@ -1,6 +1,5 @@
-// default package
+package com.acc.datos.hibernate_project.pojos;
 // Generated 24 nov 2025, 10:32:36 by Hibernate Tools 6.6.33.Final
-
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
